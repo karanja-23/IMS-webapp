@@ -42,8 +42,8 @@
 }
 .text{
     margin-left: 10px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     color: var(--blue);
     opacity: 0.8;
 }
@@ -55,8 +55,8 @@
 
 .item .active{
     text-decoration: none;
-    color: var(--orange);
-    background-color: var(--white);
+    color: var(--white);
+    background-color: var(--darkerShade);
     opacity: 0.8;
 }
 .item .active .icon{
@@ -64,4 +64,13 @@
 }
 .item .active .text{
     color: var(--orange);
+}
+.profile{
+    width: 100%;
+    margin-top: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--blue);
+    gap: 10px;
 }

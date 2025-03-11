@@ -14,23 +14,25 @@ import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import WorkspacesRoundedIcon from '@mui/icons-material/WorkspacesRounded';
 import RuleFolderRoundedIcon from '@mui/icons-material/RuleFolderRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import "../CSS/sidebar.css"
 import { use } from "react";
 function  SidebarComponent() {
-    const {isOpen, toggle} = useContext(AppContext);
+    const {isOpen, toggle,user} = useContext(AppContext);
     const [width, setWidth] = useState(200);
     const [showLogo, setShowLogo] = useState(true);
+    console.log(user)
     useLayoutEffect(() => {
       if (!isOpen) {
         setWidth(60);
         setShowLogo(false);
       }
     },[isOpen])
-    const handleToggle = () => {
-        toggle();
-        setShowLogo(!showLogo);
-        setWidth(isOpen ? 60 : 200);
-
+    const handleToggle = (e) => {
+      e.stopPropagation();
+      toggle();
+      setShowLogo(!showLogo);
+      setWidth(isOpen ? 60 : 200);
     }
     
         return (
@@ -40,7 +42,7 @@ function  SidebarComponent() {
             <div style={{ display: 'flex', alignItems: 'center', width: width, justifyContent: 'center', gap: '30px', marginBottom: '30px'}}>
             <img src={logo} alt="Logo" style={{display : showLogo ? 'block' : 'none' ,width: '65%', height: 'auto', marginBottom: '10px' }} />
             <div onClick={handleToggle}>
-              {isOpen ? <MenuRoundedIcon style={{fontSize: '1.7rem'}}/> : <FontAwesomeIcon icon={faBars}    style={{ cursor: 'pointer',fontSize: '1.2rem',color: '#07013A',justifySelf: isOpen ? 'flex-start' : 'center', marginTop: isOpen ? '-10px' : '7px', marginRight: isOpen ? '10px' : '0' }} /> }
+              {isOpen ? <MenuRoundedIcon style={{fontSize: '1.6rem'}}/> : <FontAwesomeIcon icon={faBars}    style={{ cursor: 'pointer',fontSize: '1.2rem',color: '#07013A',justifySelf: isOpen ? 'flex-start' : 'center', marginTop: isOpen ? '-10px' : '7px', marginRight: isOpen ? '10px' : '0' }} /> }
             </div>
             
             </div>
@@ -99,6 +101,10 @@ function  SidebarComponent() {
                     </NavLink>
                 </div>                            
                 
+              </div>
+              <div className="profile">
+                <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.5rem'}}/>
+                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.9rem',fontWeight: '400'}}>{user.name}</span>
               </div>
             </div>
           );
