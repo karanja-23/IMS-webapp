@@ -101,6 +101,7 @@ function Login() {
                 })        
         }
         else {
+            setIsLoading(false)
             toast("Please enter your email and password",{
                 position: "top-center",
                 autoClose: 5000,
@@ -130,7 +131,7 @@ function Login() {
             </div>
             <ToastContainer />
             <div className="form">
-                <img src={logo} alt="logo"/>
+                <img src={logo} style={{color: "white"}} alt="logo"/>
                 <h2>Welcome back to Moringa School IMS</h2>
                 <form id="form">
                     <h4 id="inst">Please enter your email and password:</h4>

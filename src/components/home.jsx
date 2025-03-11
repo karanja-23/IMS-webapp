@@ -1,6 +1,7 @@
 import { AppContext } from "../context/context";
 import { useContext, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import SidebarComponent from "./sidebar";
 function Home() {
     const navigate = useNavigate();
     const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken} =useContext(AppContext);
@@ -35,7 +36,8 @@ function Home() {
     }, [loggedIn]);
     return (
         <div>
-            <h1>Home</h1>
+           
+            <SidebarComponent />
         </div>
     );
 }
