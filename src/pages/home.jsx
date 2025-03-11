@@ -1,11 +1,11 @@
 import { AppContext } from "../context/context";
-import { useContext, useEffect} from "react";
+import { useContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import SidebarComponent from "./sidebar";
+import SidebarComponent from "../components/sidebar";
 function Home() {
     const navigate = useNavigate();
     const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken} =useContext(AppContext);
-    
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token){
@@ -35,8 +35,7 @@ function Home() {
       
     }, [loggedIn]);
     return (
-        <div>
-           
+        <div className="main">           
             <SidebarComponent />
         </div>
     );
