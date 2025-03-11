@@ -1,12 +1,18 @@
 import { AppContext } from "../context/context";
-import { useContext, useEffect} from "react";
+import { useContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import SidebarComponent from "../components/sidebar";
+import "../CSS/home.css"
 function Home() {
     const navigate = useNavigate();
-    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken} =useContext(AppContext);
-    
+    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen} =useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
+      if (loggedIn) {
+        navigate("/");
+      }
         const token = localStorage.getItem("token");
+
         if (token){
             setAccessToken(token)
             fetch(`http://172.236.2.18:5000/users/protected/user`, {
@@ -21,10 +27,7 @@ function Home() {
                   if (data) {
                     setUser(data);  
                     setLoggedIn(true);
-                setTimeout(() => {
-                    setIsLoading(false);
-                    navigate("/");
-                }, 1000);                             
+                    setIsLoading(false)                            
                   }
                 })
             }
@@ -34,8 +37,11 @@ function Home() {
       
     }, [loggedIn]);
     return (
-        <div>
-            <h1>Home</h1>
+        <div className="main">           
+            <SidebarComponent />
+            <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 220px)' : 'calc(100vw - 80px)',left: isOpen ? 210 : 70}} >
+
+            </div>
         </div>
     );
 }
