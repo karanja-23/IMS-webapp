@@ -10,7 +10,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const {setUser,setAccessToken,accessToken, user,setLoggedIn} = useContext(AppContext);
+    const {setUser,setAccessToken,accessToken, user,setLoggedIn,setTeam} = useContext(AppContext);
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
 
@@ -63,11 +63,29 @@ function Login() {
                               if (data) {
                                 setUser(data);  
                                 setLoggedIn(true);
-                            setTimeout(() => {
-                                setIsLoading(false);
-                                navigate("/");
-                            }, 1000);                             
+                            
                               }
+                            })
+                            .then(() => {
+                                fetch ('https://mobileimsbackend.onrender.com/users',{
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${data.access_token}`
+                                    }
+                                })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data) {
+                                        setTeam(data);
+                                    }
+                                })
+                            })
+                            .then(() => {
+                                setTimeout(() => {
+                                    setIsLoading(false);
+                                    navigate("/");
+                                }, 1000); 
                             })
                         
                         }
@@ -87,13 +105,30 @@ function Login() {
                                   if (data) {
                                     setUser(data);                                    
                                     setLoggedIn(true);
-                                    setTimeout(() => {
-                                       setIsLoading(false);
-                                       navigate("/"); 
-                                    },1000)
-                                    
+                                                                       
                                   }
                                 }) 
+                                .then(() => {
+                                    fetch ('https://mobileimsbackend.onrender.com/users',{
+                                        method: "GET",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                            Authorization: `Bearer ${data.access_token}`
+                                        }
+                                    })
+                                    .then((response) => response.json())
+                                    .then((data) => {
+                                        if (data) {
+                                            setTeam(data);
+                                        }
+                                    })
+                                })
+                                .then(() => {
+                                    setTimeout(() => {                                        
+                                        setIsLoading(false);
+                                        navigate("/");
+                                    }, 1000);
+                                })
          
                         }
                     }
