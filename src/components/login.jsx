@@ -67,6 +67,7 @@ function Login() {
                               }
                             })
                             .then(() => {
+                              
                                 fetch ('https://mobileimsbackend.onrender.com/users',{
                                     method: "GET",
                                     headers: {
@@ -76,8 +77,10 @@ function Login() {
                                 })
                                 .then((response) => response.json())
                                 .then((data) => {
+                                    
                                     if (data) {
                                         setTeam(data);
+                                        localStorage.setItem("team", JSON.stringify(data));
                                     }
                                 })
                             })
@@ -120,6 +123,7 @@ function Login() {
                                     .then((data) => {
                                         if (data) {
                                             setTeam(data);
+                                            localStorage.setItem("team", JSON.stringify(data));
                                         }
                                     })
                                 })

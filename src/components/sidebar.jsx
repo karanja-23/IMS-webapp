@@ -16,7 +16,8 @@ import RuleFolderRoundedIcon from '@mui/icons-material/RuleFolderRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import "../CSS/sidebar.css"
-import { use } from "react";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+
 function  SidebarComponent() {
     const {isOpen, toggle,user} = useContext(AppContext);
     const [width, setWidth] = useState(200);
@@ -105,6 +106,10 @@ function  SidebarComponent() {
               <div className="profile">
                 <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.3rem'}}/>
                 <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.8rem',fontWeight: '400'}}>{user.name}</span>
+              </div>
+              <div className="logout">
+                <LogoutRoundedIcon style={{fontSize: '1.5rem'}}/>
+                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.9rem',fontWeight: '500'}}>Logout</span>
               </div>
             </div>
           );
