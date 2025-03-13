@@ -16,12 +16,13 @@ import RuleFolderRoundedIcon from '@mui/icons-material/RuleFolderRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import "../CSS/sidebar.css"
-import { use } from "react";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+
 function  SidebarComponent() {
     const {isOpen, toggle,user} = useContext(AppContext);
     const [width, setWidth] = useState(200);
     const [showLogo, setShowLogo] = useState(true);
-    console.log(user)
+    
     useLayoutEffect(() => {
       if (!isOpen) {
         setWidth(60);
@@ -37,7 +38,7 @@ function  SidebarComponent() {
     
         return (
             <div className="sidebar"
-            style={{ width: width, transition: 'width 0.3s' }}
+            style={{ width: width, transition: 'width 0.2s', boxSizing: 'border-box'}}
              >
             <div style={{ display: 'flex', alignItems: 'center', width: width, justifyContent: 'center', gap: '30px', marginBottom: '30px'}}>
             <img src={logo} alt="Logo" style={{display : showLogo ? 'block' : 'none' ,width: '65%', height: 'auto', marginBottom: '10px' }} />
@@ -103,8 +104,12 @@ function  SidebarComponent() {
                 
               </div>
               <div className="profile">
-                <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.5rem'}}/>
-                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.9rem',fontWeight: '400'}}>{user.name}</span>
+                <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.3rem'}}/>
+                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.8rem',fontWeight: '400'}}>{user.name}</span>
+              </div>
+              <div className="logout">
+                <LogoutRoundedIcon style={{fontSize: '1.5rem'}}/>
+                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.9rem',fontWeight: '500'}}>Logout</span>
               </div>
             </div>
           );
