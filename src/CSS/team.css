@@ -10,6 +10,7 @@
 }
 .table{
     padding-bottom: 50px;
+    z-index: 1;
     
 }
 .table th, .table td {
