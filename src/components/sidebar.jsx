@@ -17,9 +17,11 @@ import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import "../CSS/sidebar.css"
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 function  SidebarComponent() {
-    const {isOpen, toggle,user} = useContext(AppContext);
+  const navigate = useNavigate()
+    const {isOpen, toggle,user, setLoggedIn, setUser, setTeam,setAccessToken} = useContext(AppContext);
     const [width, setWidth] = useState(200);
     const [showLogo, setShowLogo] = useState(true);
     
@@ -34,6 +36,63 @@ function  SidebarComponent() {
       toggle();
       setShowLogo(!showLogo);
       setWidth(isOpen ? 60 : 200);
+    }
+    function handleLogout(){
+      toast(
+        ({ closeToast }) => (
+          <div>
+            <p>Are you sure yoy want to logout?</p>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+              <button
+                onClick={() => {                              
+                  closeToast();
+                  localStorage.removeItem("token")
+                  localStorage.removeItem("team")
+                  setTeam([])
+                  setUser({})
+                  setLoggedIn(false)
+                  setAccessToken("")
+                  navigate("/login")
+  
+                }}
+                style={{
+                  backgroundColor:"#07013A",
+                  color: "white",
+                  border: "none",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  borderRadius: "3px",
+                }}
+              >
+                Yes
+              </button>
+              <button
+                onClick={closeToast}
+                style={{
+                  backgroundColor: "#FC4F11",
+                  color: "white",
+                  border: "none",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  borderRadius: "3px",
+
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          position: "top-center",
+          autoClose: false, 
+          closeOnClick: false,
+          draggable: false,
+          hideProgressBar: true,
+          theme: "light",
+          
+        }
+      );
     }
     
         return (
@@ -107,7 +166,8 @@ function  SidebarComponent() {
                 <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.3rem'}}/>
                 <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.8rem',fontWeight: '400'}}>{user.name}</span>
               </div>
-              <div className="logout">
+              
+              <div className="logout" onClick={handleLogout}>
                 <LogoutRoundedIcon style={{fontSize: '1.5rem'}}/>
                 <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.9rem',fontWeight: '500'}}>Logout</span>
               </div>

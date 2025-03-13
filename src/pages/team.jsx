@@ -24,7 +24,7 @@ import { ToastContainer, toast } from "react-toastify";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 function Team() {
-    const LIMIT = 5
+    const LIMIT = 7
     const navigate = useNavigate();
     const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam} =useContext(AppContext);
     const [isLoading, setIsLoading] = useState(true);
@@ -196,9 +196,11 @@ function Team() {
     }
     return (
       <>
-    <div className="main" style={{opacity: addUser ? 0.4 : 0.99}}>           
+    <div className="main" style={{opacity: addUser ? 0.4 : 0.99}}> 
+        <ToastContainer />          
         <SidebarComponent />
         <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s',}} >
+        
             <div className="header">
                 <div className="title">
                     <WorkspacesRoundedIcon style={{marginRight: '10px'}}/>
@@ -220,7 +222,17 @@ function Team() {
                 placeholder="search ..."
                 value={search}
                 onChange={handleSearch}
-                style={{ width: '25%', padding: "5px 12px",opacity: '0.9ss' }}
+                style={{
+                  width: '25%',
+                  padding: '7px 12px',
+                  opacity: '0.9',
+                  outline: 'none',
+                  border: '1px solid #ccc', 
+                  borderRadius: '5px', 
+                  backgroundColor: '#f5f5f5',
+                  fontSize: '14px',
+                  transition: 'all 0.3s ease-in-out'
+              }}
               >
               
               </input>
@@ -233,7 +245,9 @@ function Team() {
 
               </div>
               </div>
+              
               <Table data={{nodes:paginatedData}} theme={theme} className="table">
+                
                 {
                   (tableList) =>(
                     <>

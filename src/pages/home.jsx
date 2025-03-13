@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SidebarComponent from "../components/sidebar";
 import CircleNotificationsRoundedIcon from '@mui/icons-material/CircleNotificationsRounded';
 import "../CSS/home.css"
+import { ToastContainer } from "react-toastify";
 function Home() {
     const navigate = useNavigate();
     const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen} =useContext(AppContext);
@@ -41,7 +42,8 @@ function Home() {
       
     }, [loggedIn]);
     return (
-        <div className="main">           
+        <div className="main">  
+            <ToastContainer />         
             <SidebarComponent />
             <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s'}} >
             <div className="header">
