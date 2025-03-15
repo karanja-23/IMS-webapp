@@ -10,7 +10,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const {setUser,setAccessToken,accessToken, user,setLoggedIn,setTeam} = useContext(AppContext);
+    const {setUser,setAccessToken,accessToken, user,setLoggedIn,setTeam,setRoles} = useContext(AppContext);
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
 
@@ -62,6 +62,7 @@ function Login() {
                             .then((data) => {
                               if (data) {
                                 setUser(data);  
+                                getRoles();
                                 setLoggedIn(true);
                             
                               }
@@ -106,7 +107,7 @@ function Login() {
                                 .then((data) => {
                                   
                                   if (data) {
-                                    setUser(data);                                    
+                                    setUser(data);  
                                     setLoggedIn(true);
                                                                        
                                   }
@@ -128,6 +129,7 @@ function Login() {
                                     })
                                 })
                                 .then(() => {
+                                    getRoles();                                  
                                     setTimeout(() => {                                        
                                         setIsLoading(false);
                                         navigate("/");
@@ -161,6 +163,16 @@ function Login() {
     function handlePasswordChange(event) {
         setPassword(event.target.value);
     }
+    async function getRoles(){
+        fetch('https://mobileimsbackend.onrender.com/roles/all',{
+          method: 'GET',
+         
+        })
+        .then(response => response.json())
+        .then(data => {
+          setRoles(data)
+        })
+      }
 
     return (
         <div className="login">
