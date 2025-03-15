@@ -38,6 +38,7 @@ function  SidebarComponent() {
       setWidth(isOpen ? 60 : 200);
     }
     function handleLogout(){
+      console.log("logout")
       toast(
         ({ closeToast }) => (
           <div>

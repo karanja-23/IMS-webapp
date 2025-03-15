@@ -8,12 +8,13 @@ const AppProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState("");
     const [isOpen, setIsOpen] = useState(true);
     const [team, setTeam] = useState([]);
+    const [roles, setRoles] = useState([])
 
     const toggle = () => {
         setIsOpen(!isOpen);
     }
     return (
-        <AppContext.Provider value={{ loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken, isOpen,setIsOpen, toggle, team, setTeam}}>
+        <AppContext.Provider value={{ loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken, isOpen,setIsOpen, toggle, team, setTeam, roles, setRoles}}>
             {children}
         </AppContext.Provider>
     );

@@ -23,23 +23,29 @@ import { getTheme } from '@table-library/react-table-library/baseline';
 import { ToastContainer, toast } from "react-toastify";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+
 function Team() {
     const LIMIT = 7
     const navigate = useNavigate();
-    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam} =useContext(AppContext);
+    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam, roles, setRoles} =useContext(AppContext);
     const [isLoading, setIsLoading] = useState(true);
     const [addUser, setAddUser] = useState(false)
-    const [roles, setRoles] = useState([])
     const [name, setName] = useState('')
+    const [newName, setNewName] = useState('')
     const [email, setEmail] = useState('')
+    const [newEmail, setNewEmail] = useState('')
     const [contact, setContact] = useState('')
+    const [newContact, setNewContact] = useState('')
     const [password, setPassword] = useState('')
+    const [newPassword, setNewPassword] = useState('')
     const [roleId, setRoleId] = useState('')
+    const [newRoleId, setNewRoleId] = useState('')
+    const [editUser, setEditUser] = useState(false)
     const [search, setSearch] = useState("")
     const [actionRowId, setActionRowId] =useState(null)
     const key = 'Composed Table'
     const [currentPage, setCurrentPage] = useState(0)
-    
+    const [currentUserId, setCurrentUserId] = useState(null)
     const theme = useTheme(getTheme())
     const filteredData = team.filter((item) => item.username.toLowerCase().includes(search.toLowerCase()));
     const totalPages = Math.ceil(filteredData.length / LIMIT);
@@ -49,7 +55,8 @@ function Team() {
 
     useEffect(() => {
       if (loggedIn) {
-     
+        
+        setTeam(JSON.parse(localStorage.getItem("team")))
         navigate("/team");
       }   
       else {
@@ -71,6 +78,12 @@ function Team() {
                     setLoggedIn(true);
                     setIsLoading(false)                            
                   }
+                })
+                .then(() => {
+                  if (roles.length > 0){
+                    return
+                  }
+                  getRoles()
                 })
                 .then(()=>{
                   if(team.length > 0){
@@ -94,6 +107,7 @@ function Team() {
                       if (data) {
                           setTeam(data);
                           localStorage.setItem("team", JSON.stringify(data))
+                          
                       }
                   })
                   }
@@ -194,11 +208,134 @@ function Team() {
       setSearch(event.target.value)
       setCurrentPage(0)
     }
+    function showEditUser(id){
+      setCurrentUserId(id)
+      fetch(`https://mobileimsbackend.onrender.com/users/${id}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data){
+          setNewName(data.username)
+          setNewEmail(data.email)
+          setNewContact(data.contact)
+          setNewPassword(data.password)
+          setNewRoleId(data.role_id)
+ 
+        }
+      })
+      .then(()=>{
+        setActionRowId(null)
+        setEditUser(true)
+      })
+    }
+    function handleEditUser(event){
+      
+      event.preventDefault()
+      const editUser = {
+        username: newName,
+        email: newEmail,
+        contact: newContact,
+        password: newPassword,
+        role_id: Number(newRoleId)
+      }
+      console.log(editUser)
+      fetch(`https://mobileimsbackend.onrender.com/users/${currentUserId}`,{
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editUser)
+
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data["contact"]){
+          toast("User updated successfully",{
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            className: "toast-message",
+            bodyClassName: "toast-message-body",
+        });
+        
+        }        
+      })
+      .then(()=>{
+        fetch('https://mobileimsbackend.onrender.com/users',{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data){
+            setTeam(data)
+            setEditUser(false)
+          }
+        })
+        
+      })
+    }
+    function handleDeleteUser(id){
+      fetch(`https://mobileimsbackend.onrender.com/users/${id}`,{
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        if (data['message'] === "User deleted"){
+          setTimeout(() => {
+            toast.success("User deleted successfully",{
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              className: "toast-message",
+              bodyClassName: "toast-message-body",
+          },100);  
+          })
+        }
+      })
+      .then(()=>{
+        fetch('https://mobileimsbackend.onrender.com/users',{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data){
+            localStorage.removeItem("team")
+            localStorage.setItem("team", JSON.stringify(data))
+            setTeam(data)
+          }
+        })
+      })
+    }
     return (
       <>
     <div className="main" style={{opacity: addUser ? 0.4 : 0.99}}> 
-        <ToastContainer />          
+               
         <SidebarComponent />
+        <ToastContainer />   
         <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s',}} >
         
             <div className="header">
@@ -237,7 +374,6 @@ function Team() {
               
               </input>
               <div onClick={()=> {
-                getRoles()
                 setAddUser(true)
               }} style={{display:'flex', cursor: 'pointer',justifyItems:'center', alignItems:'center',gap: '3px',backgroundColor:'#FC4F11', color:'white', padding:"5px 8px", fontWeight:'600', opacity:'0.9', borderRadius: "3px"}}>
                 <ControlPointRoundedIcon />
@@ -277,11 +413,11 @@ function Team() {
                               )} />
                             {actionRowId === item.id ? (
                               <div className="action-modal">
-                                  <span >
-                                    <EditRoundedIcon style={{fontSize: "1.3em"}} />
+                                  <span onClick={() => showEditUser(item.id)} >
+                                    <EditRoundedIcon  style={{fontSize: "1.3em"}} />
                                     edit user
                                   </span>
-                                  <span>
+                                  <span onClick={() => handleDeleteUser(item.id)}>
                                     <DeleteRoundedIcon style={{fontSize: "1.3em"}} />
                                     delete
                                   </span>
@@ -327,6 +463,30 @@ function Team() {
               <label for="password">Password</label>
               <input id="password" onChange={(event) => setPassword(event.target.value)} value={password} type="password" placeholder="Password" />
               <select style={{alignSelf:'flex-start'}} onChange={(event) => setRoleId(event.target.value)}>
+                <option value={0}>Select role</option>
+                {roles.map((role) => (
+                  <option value={role.id}>{role.name}</option>
+                ))}
+              </select>
+              <input className="button" type="submit" value="Submit" />
+            </form>
+          </div>        
+        ) : null}
+            {editUser ? (
+          <div className="add_user_modal">
+            <ToastContainer />
+            <h3 style={{opacity:"0.75"}}>Edit user</h3>
+            <CloseRoundedIcon onClick={()=> setEditUser(false)}  className="close-btn" />
+            <form onSubmit={handleEditUser}>
+              <label for="name" >Name</label>
+              <input id="name" onChange={(event) => setNewName(event.target.value)} value={newName} type="text" placeholder="Name" />
+              <label for="email">Email</label>
+              <input id="email" onChange={(event) => setNewEmail(event.target.value)} value={newEmail} type="email" placeholder="Email" />
+              <label for="contact">Contact</label>
+              <input id="contact" onChange={(event) => setNewContact(event.target.value)} value={newContact} type="text" placeholder="Contact" />
+              <label for="password">Password</label>
+              <input id="password" onChange={(event) => setNewPassword(event.target.value)} value={newPassword} type="password" placeholder="Password" />
+              <select style={{alignSelf:'flex-start'}} onChange={(event) => setNewRoleId(event.target.value)}>
                 <option value={0}>Select role</option>
                 {roles.map((role) => (
                   <option value={role.id}>{role.name}</option>

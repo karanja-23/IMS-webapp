@@ -40,3 +40,33 @@
     opacity: 1 !important;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) !important;
 }
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.table th, 
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.table th {
+    background-color: var(--blue);
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    opacity: 0.87;
+}
+.table td {
+    border-bottom: 1px solid #e0e0e0;
+}
+.action-modal{
+    z-index: 9999 !important;
+}
