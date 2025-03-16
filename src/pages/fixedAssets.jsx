@@ -25,7 +25,7 @@ function FixedAssets() {
     const [currentPage, setCurrentPage] = useState(0);
     const theme = useTheme(getTheme());
     
-    const filteredData = team.filter((item) => item.assetName.toLowerCase().includes(search.toLowerCase()));
+    const filteredData = team.filter((item) => item.assetName?.toLowerCase().includes(search.toLowerCase()));
     const totalPages = Math.ceil(filteredData.length / LIMIT);
     const paginatedData = filteredData.slice(currentPage * LIMIT, (currentPage + 1) * LIMIT);
 
