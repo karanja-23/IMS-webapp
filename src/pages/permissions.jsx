@@ -267,86 +267,56 @@ function Permissions() {
   }
   return (
     <>
-      <div className="main" style={{ opacity: addUser ? 0.4 : 0.99 }}>
-        <ToastContainer />
-        <SidebarComponent />
-        <div
-          className="content"
-          style={{
-            boxSizing: "border-box",
-            width: isOpen ? "calc(100vw - 210px)" : "calc(100vw - 70px)",
-            left: isOpen ? 202 : 62,
-            transition: "0.3s",
-          }}
-        >
-          <div className="header">
-            <div className="title">
-              <WorkspacesRoundedIcon style={{ marginRight: "10px" }} />
-              <h2>Permissions</h2>
-            </div>
-            <div className="notification">
-              <CircleNotificationsRoundedIcon
-                style={{ marginRight: "10px", fontSize: "1.9rem" }}
-              />
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              marginLeft: "5%",
-              flexDirection: "column",
-              maxWidth: "90%",
-              opacity: "0.8",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                margin: "50px 0px 40px 10px",
-                justifyContent: "space-between",
-              }}
-            >
-              <input
-                type="search"
-                placeholder="search ..."
-                value={search}
-                onChange={handleSearch}
-                style={{
-                  width: "25%",
-                  padding: "7px 12px",
-                  opacity: "0.9",
-                  outline: "none",
-                  border: "1px solid #ccc",
-                  borderRadius: "5px",
-                  backgroundColor: "#f5f5f5",
-                  fontSize: "14px",
-                  transition: "all 0.3s ease-in-out",
-                }}
-              ></input>
-              <div
-                onClick={() => {
-                  setAddUser(true);
-                }}
-                style={{
-                  display: "flex",
-                  cursor: "pointer",
-                  justifyItems: "center",
-                  alignItems: "center",
-                  gap: "3px",
-                  backgroundColor: "#FC4F11",
-                  color: "white",
-                  padding: "5px 8px",
-                  fontWeight: "600",
-                  opacity: "0.9",
-                  borderRadius: "3px",
-                }}
-              >
-                <ControlPointRoundedIcon />
-                add new Role
-              </div>
-            </div>
+    <div className="main" style={{opacity: addUser ? 0.4 : 0.99}}> 
+               
+               <SidebarComponent />
+               <ToastContainer />   
+               <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s',}} >
+               
+                   <div className="header">
+                       <div className="title">
+                          
+                           <h2>Permissions</h2>
+                           
+                       </div>
+                       <div className="notification">
+                           <CircleNotificationsRoundedIcon style={{marginRight: '10px', fontSize: '1.9rem'}}/>
+                           
+                       </div>
+       
+                   </div>
+       
+                   <div style={{display: 'flex', marginLeft:'5%',flexDirection:'column' ,maxWidth:'90%',opacity: '0.8'}}> 
+       
+                     <div style={{display: 'flex', alignItems: 'center' ,margin: "50px 0px 40px 10px", justifyContent: 'space-between'}}>
+                     <input
+                       type="search"
+                       placeholder="search ..."
+                       value={search}
+                       onChange={handleSearch}
+                       style={{
+                         width: '25%',
+                         padding: '7px 12px',
+                         opacity: '0.9',
+                         outline: 'none',
+                         border: '1px solid #ccc', 
+                         borderRadius: '5px', 
+                         backgroundColor: '#f5f5f5',
+                         fontSize: '14px',
+                         transition: 'all 0.3s ease-in-out'
+                     }}
+                     >
+                     
+                     </input>
+                     <div onClick={()=> {
+                       setAddUser(true)
+                     }} style={{display:'flex', cursor: 'pointer',justifyItems:'center', alignItems:'center',gap: '3px',backgroundColor:'#FC4F11', color:'white', padding:"5px 8px", fontWeight:'600', opacity:'0.9', borderRadius: "3px"}}>
+                       <ControlPointRoundedIcon />
+                       add new Role
+       
+                     </div>
+                     </div>
+                     
 
             <Table
               data={{ nodes: paginatedData }}
