@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    --blue: #07013A;
+    --orange: #FC4F11;
+    --white: #FFFFFF;
+    --black: #000000;
+    --grey: #707070;
+    --darkerShade: #333;
+    font-family: poppins;
+}
+
+.add-vendor{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    
+    margin-left: 5%;
+    margin-top: 50px;
+}
+.vendor-form{
+   width: 100%;
+}
+.menu {
+    width: 100%;
+    color: var(--white);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;   
+    box-sizing: border-box;
+    border-radius: 8px;
+    background-color: var(--blue);
+    position: relative;
+   box-sizing: border-box;
+   opacity: 0.8;
+}
+
+.menu span {
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;  
+    height: 100%;
+    box-sizing: border-box;    
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    
+}
+
+.menu span:hover,
+.menu span.active {
+    background-color: var(--orange);
+    color: var(--white);
+}
+.container{
+    margin-top: 50px;
+    width: 90%;
+    margin-left: 5%;
+    box-sizing: border-box;
+}
+.business-details{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+    width: 70%;
+    margin-left: 15%;
+    box-sizing: border-box;    
+    padding: 60px 30px 10px 30px;
+    min-height: 550px;
+    position: relative;
+
+}
+.business-details label{
+    font-weight: 600;
+    color: var(--blue);
+    opacity: 0.7;
+    font-size: 0.97em;
+    margin-bottom: -10px;
+}
+.business-details input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgb(236, 230, 230);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+    background-color: #f7f7f7;
+    color: var(--blue);
+    opacity: 0.8;
+
+}
+.btn {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    padding: 15px 40px;
+    color: var(--white);
+    font-weight: 800;
+    font-size: 0.9em;
+    border: none;
+    background-color: var(--orange);
+    opacity: 0.8;
+}
+.address-back {
+    position: absolute;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: -30px;
+    width: 40px; 
+    height: 40px;
+    padding: 0; 
+    box-sizing: border-box;
+    color: var(--blue);
+    background-color: #f7f7f7;
+    border: 1px solid rgb(236, 230, 230);
+    border-radius: 50%; 
+    font-size: 16px; 
+}

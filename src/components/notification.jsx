@@ -1,9 +1,9 @@
 import CircleNotificationsRoundedIcon from '@mui/icons-material/CircleNotificationsRounded';
-import { useContext } from 'react';
+import { useContext,useEffect } from 'react';
 import { AppContext } from '../context/context';
 function Notification() {  
     const {user} = useContext(AppContext)
-    
+
     const getGreeting = () => {
         const hour = new Date().getHours();
         if (hour >= 5 && hour < 12) return "Good morning";
