@@ -11,7 +11,10 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
+import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
+import LocationCityRoundedIcon from '@mui/icons-material/LocationCityRounded';
 import WorkspacesRoundedIcon from '@mui/icons-material/WorkspacesRounded';
+import PeopleRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import RuleFolderRoundedIcon from '@mui/icons-material/RuleFolderRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
@@ -130,7 +133,7 @@ function  SidebarComponent() {
 
                 <div className="item" style={{justifyContent: isOpen ? 'flex-start' : 'center'}} >
                     <NavLink style={{display: "flex",}} to="/vendors" className="link">
-                    < PeopleOutlineRoundedIcon className="icon"/>
+                    <AddBusinessRoundedIcon className="icon"/>
                     <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Vendors</span>            
                     </NavLink>
                 </div>
@@ -144,14 +147,14 @@ function  SidebarComponent() {
                 
                 <div className="item" style={{justifyContent: isOpen ? 'flex-start' : 'center'}} >
                     <NavLink style={{display: "flex",}} to="/spaces" className="link">
-                    < StoreRoundedIcon className="icon"/>
+                    <LocationCityRoundedIcon className="icon"/>
                     <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Spaces</span>            
                     </NavLink>
                 </div> 
                 <div className="item" style={{justifyContent: isOpen ? 'flex-start' : 'center'}} >
                     <NavLink style={{display: "flex",}} to="/team" className="link">
-                    < WorkspacesRoundedIcon className="icon"/>
-                    <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Team</span>            
+                    < PeopleRoundedIcon className="icon"/>
+                    <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Users</span>            
                     </NavLink>
                 </div>    
 

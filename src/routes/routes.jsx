@@ -7,6 +7,8 @@ import Requests from "../pages/requests"
 import Spaces from "../pages/spaces"
 import Team from "../pages/team"
 import Permissions from "../pages/permissions"
+import ViewUsers from "../pages/viewUsers"
+import AddVendor from "../pages/addvendor"
 const routes = [
     {
         path: "/",
@@ -44,8 +46,14 @@ const routes = [
         path: "/permissions",
         element: <Permissions />,
     },
-
-    
+    {
+        path: "team/:id",
+        element: <ViewUsers />,
+    },
+    {
+        path: "vendors/add",
+        element: <AddVendor />,
+    }
 ]
 
 export default routes
