@@ -448,7 +448,7 @@ function Permissions() {
             className="close-btn"
           />
           <form onSubmit={addRole}>
-            <label for="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
               id="name"
               onChange={(event) => setRoleName(event.target.value)}
@@ -517,7 +517,7 @@ function Permissions() {
             className="close-btn"
           />
           <form onSubmit={editRole}>
-            <label for="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
               id="name"
               onChange={(event) => setRoleName(event.target.value)}

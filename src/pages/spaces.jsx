@@ -407,11 +407,11 @@ function Spaces() {
             <h3 style={{opacity:"0.75"}}>Add new space</h3>
             <CloseRoundedIcon onClick={()=> setAddSpace(false)}  className="close-btn" />
             <form onSubmit={addNewSpace}>
-              <label for="name" >Name</label>
+              <label htmlFor="name" >Name</label>
               <input id="name" onChange={(event) => setName(event.target.value)} value={name} type="text" placeholder="Name" />
-              <label for="location">Location</label>
+              <label htmlFor="location">Location</label>
               <input id="location" onChange={(event) => setLocation(event.target.value)} value={location} type="text" placeholder="Location" />
-              <label for="description">Description</label>
+              <label htmlFor="description">Description</label>
               <input id="description" onChange={(event) => setDescription(event.target.value)} value={description} type="text" placeholder="Description" />
              
               <input className="button" type="submit" value="Submit" />
@@ -424,13 +424,13 @@ function Spaces() {
             <h3 style={{opacity:"0.75"}}>Edit user</h3>
             <CloseRoundedIcon onClick={()=> setEditSpace(false)}  className="close-btn" />
             <form onSubmit={handleEditSpace}>
-              <label for="name" >Name</label>
+              <label htmlFor="name" >Name</label>
               <input id="name" onChange={(event) => setNewName(event.target.value)} value={newName} type="text" placeholder="Name" />
-              <label for="location">Email</label>
+              <label htmlFor="location">Email</label>
               <input id="location" onChange={(event) => setNewLocation(event.target.value)} value={newLocation} type="text" placeholder="Location" />
-              <label for="description">Contact</label>
+              <label htmlFor="description">Contact</label>
               <input id="description" onChange={(event) => setNewDescription(event.target.value)} value={newDescription} type="text" placeholder="Description" />
-              <label for="status">Status</label>
+              <label htmlFor="status">Status</label>
               <input id="status" onChange={(event) => setNewStatus(event.target.value)} value={newStatus} type="text" placeholder="Status" />
               
               <input className="button" type="submit" value="Submit" />
