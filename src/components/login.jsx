@@ -19,7 +19,7 @@ function Login() {
         setIsLoading(true);
      
         if (email !== "" && password !== "") {
-            fetch("http://172.236.2.18:5000/auth/login", {
+            fetch("https://mobileimsbackend.onrender.com/login", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -51,7 +51,7 @@ function Login() {
                         if (checked) {                            
                          localStorage.setItem("token", data.access_token);
                          setAccessToken(data.access_token);
-                         fetch(`http://172.236.2.18:5000/users/protected/user`, {
+                         fetch(`https://mobileimsbackend.onrender.com/protected/user`, {
                             method: "GET",
                             headers: {
                               Authorization: `Bearer ${data.access_token}`,
@@ -96,7 +96,7 @@ function Login() {
                         else {
                             setAccessToken(data.access_token);
                           
-                            fetch(`http://172.236.2.18:5000/users/protected/user`, {
+                            fetch(`https://mobileimsbackend.onrender.com/protected/user`, {
                                 method: "GET",
                                 headers: {
                                   Authorization: `Bearer ${data.access_token}`,
