@@ -530,7 +530,7 @@ function Team() {
             className="close-btn"
           />
           <form onSubmit={addNewUser}>
-            <label for="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
               id="name"
               onChange={(event) => setName(event.target.value)}
@@ -538,7 +538,7 @@ function Team() {
               type="text"
               placeholder="Name"
             />
-            <label for="email">Email</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               onChange={(event) => setEmail(event.target.value)}
@@ -546,7 +546,7 @@ function Team() {
               type="email"
               placeholder="Email"
             />
-            <label for="contact">Contact</label>
+            <label htmlFor="contact">Contact</label>
             <input
               id="contact"
               onChange={(event) => setContact(event.target.value)}
@@ -554,7 +554,7 @@ function Team() {
               type="text"
               placeholder="Contact"
             />
-            <label for="password">Password</label>
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               onChange={(event) => setPassword(event.target.value)}
@@ -584,7 +584,7 @@ function Team() {
             className="close-btn"
           />
           <form onSubmit={handleEditUser}>
-            <label for="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
               id="name"
               onChange={(event) => setNewName(event.target.value)}
@@ -592,7 +592,7 @@ function Team() {
               type="text"
               placeholder="Name"
             />
-            <label for="email">Email</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               onChange={(event) => setNewEmail(event.target.value)}
@@ -600,7 +600,7 @@ function Team() {
               type="email"
               placeholder="Email"
             />
-            <label for="contact">Contact</label>
+            <label htmlFor="contact">Contact</label>
             <input
               id="contact"
               onChange={(event) => setNewContact(event.target.value)}
@@ -608,7 +608,7 @@ function Team() {
               type="text"
               placeholder="Contact"
             />
-            <label for="password">Password</label>
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               onChange={(event) => setNewPassword(event.target.value)}

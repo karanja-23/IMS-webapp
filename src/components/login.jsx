@@ -188,13 +188,13 @@ function Login() {
                 <h2>Welcome back to Moringa School IMS</h2>
                 <form id="form">
                     <h4 id="inst">Please enter your email and password:</h4>
-                    <label for="email">Email</label>
+                    <label htmlFor="email">Email</label>
                     <input id="email" onChange={(event) => handleEmailChange(event)} type="email" placeholder="johndoe@gmail.com" />
-                    <label for="password">Password</label>
+                    <label htmlFor="password">Password</label>
                     <input id="password" onChange={(event) => handlePasswordChange(event)} type="password" placeholder="johndoe@123" />
                     <div style={{display: "flex", width: "100%", alignItems: "left", paddingLeft: "17%"}}>
                     <input style={{marginRight: "10px", width: "15px", height: "15px"}} onChange={(event) => setChecked(event.target.checked)} checked = {checked} type="checkbox" id="remember" name="remember" />
-                    <label style={{marginLeft: "5px", fontSize: "14px", fontWeight: "500"}} for="remember">Remember me</label>
+                    <label style={{marginLeft: "5px", fontSize: "14px", fontWeight: "500"}} htmlFor="remember">Remember me</label>
                     </div>
                     <button onClick={(event) => {handleLogin(event)}} type="submit">
                         {isLoading ? (

@@ -45,7 +45,7 @@ function  SidebarComponent() {
       toast(
         ({ closeToast }) => (
           <div>
-            <p>Are you sure yoy want to logout?</p>
+            <p>Are you sure you want to logout?</p>
             <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
               <button
                 onClick={() => {                              
