@@ -41,7 +41,7 @@ function  SidebarComponent() {
       setWidth(isOpen ? 60 : 200);
     }
     function handleLogout(){
-      console.log("logout")
+     
       toast(
         ({ closeToast }) => (
           <div>
@@ -168,7 +168,7 @@ function  SidebarComponent() {
               </div>
               <div className="profile">
                 <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.3rem'}}/>
-                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.8rem',fontWeight: '400'}}>{user.name}</span>
+                <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.8rem',fontWeight: '400'}}>{user.username}</span>
               </div>
               
               <div className="logout" onClick={handleLogout}>

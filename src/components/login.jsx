@@ -48,7 +48,8 @@ function Login() {
                         return;
                     }
                     if (data.access_token) {
-                        if (checked) {                            
+                        if (checked) {   
+                         
                          localStorage.setItem("token", data.access_token);
                          setAccessToken(data.access_token);
                          fetch(`https://mobileimsbackend.onrender.com/protected/user`, {
@@ -60,6 +61,7 @@ function Login() {
                           })
                             .then((response) => response.json())
                             .then((data) => {
+                                
                               if (data) {
                                 setUser(data);  
                                 getRoles();

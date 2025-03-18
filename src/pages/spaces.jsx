@@ -109,7 +109,7 @@ function Spaces() {
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data)
+            
             localStorage.removeItem("spaces")
             localStorage.setItem("spaces", JSON.stringify(data));
             setSpaces(data)
@@ -143,7 +143,7 @@ function Spaces() {
           location: location,
           description: description,         
         }
-        console.log(newSpace)
+       
         fetch('https://mobileimsbackend.onrender.com/spaces',{
           method: 'POST',
           headers: {
@@ -217,7 +217,7 @@ function Spaces() {
         description: newDescription,
         status: newStatus
       }
-      console.log(editSpace)
+      
       fetch(`https://mobileimsbackend.onrender.com/spaces/${currentSpaceId}`,{
         method: 'PUT',
         headers: {
@@ -265,7 +265,7 @@ function Spaces() {
       })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        
         if (data['message'] === "Space deleted"){
           setTimeout(() => {
             toast.success("Space deleted successfully",{

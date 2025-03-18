@@ -190,7 +190,7 @@ function Team() {
         password: password,
         role_id: Number(roleId),
       };
-      console.log(newUser);
+      
       fetch("https://mobileimsbackend.onrender.com/users", {
         method: "POST",
         headers: {
@@ -272,7 +272,7 @@ function Team() {
       password: newPassword,
       role_id: Number(newRoleId),
     };
-    console.log(editUser);
+   
     fetch(`https://mobileimsbackend.onrender.com/users/${currentUserId}`, {
       method: "PUT",
       headers: {
@@ -322,7 +322,7 @@ function Team() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        
         if (data["message"] === "User deleted") {
           setTimeout(() => {
             toast.success(

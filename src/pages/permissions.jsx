@@ -127,7 +127,7 @@ function Permissions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        
         setRoles(data); 
         localStorage.removeItem("roles");
         localStorage.setItem("roles", JSON.stringify(data));      
@@ -149,7 +149,7 @@ function Permissions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        
         if (data["name"]) {
           toast("Role added successfully", {
             position: "top-center",
@@ -175,7 +175,7 @@ function Permissions() {
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
+              
             });
         }
       })
@@ -206,14 +206,14 @@ function Permissions() {
   }
   function handlePermissionChange(event) {
     const { checked, value } = event.target;
-    const permissionId = parseInt(value, 10); // Ensure it's stored as an integer
+    const permissionId = parseInt(value, 10); 
 
     setSelectedPermissions((prevPermissions) => {
       const updatedPermissions = checked
-        ? [...prevPermissions, permissionId] // Add if checked
-        : prevPermissions.filter((id) => id !== permissionId); // Remove if unchecked
+        ? [...prevPermissions, permissionId] 
+        : prevPermissions.filter((id) => id !== permissionId);
 
-      console.log(updatedPermissions); // Now it will log the correct updated array
+      
       return updatedPermissions;
     });
   }
@@ -268,7 +268,7 @@ function Permissions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+      
         setRoleId("");
         setSelectedPermissions([]);
         getRoles();
@@ -391,7 +391,7 @@ function Permissions() {
                                 onClick={() => {
                                   setRoleName(item.name);
                                   setRoleId(item.id);
-                                  {console.log(item.permissions)}
+                                  
                                   setSelectedPermissions(
                                     item.permissions.map((perm) => perm.id)
                                   );
