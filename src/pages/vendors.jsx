@@ -255,7 +255,7 @@ useEffect(() => {
                           />
                           {actionRowId === item.id ? (
                             <div className="action-modal">
-                              <span onClick={(() => navigate(`/team/${item.username}`,{state:{id:item.id}}))}>
+                              <span onClick={(() => navigate(`/vendors/${item.name}`,{state:{id:item.id}}))}>
                                 <RemoveRedEyeRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />

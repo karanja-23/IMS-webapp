@@ -9,6 +9,7 @@ import Team from "../pages/team"
 import Permissions from "../pages/permissions"
 import ViewUsers from "../pages/viewUsers"
 import AddVendor from "../pages/addvendor"
+import ViewVendor from "../pages/viewVendor"
 const routes = [
     {
         path: "/",
@@ -29,6 +30,10 @@ const routes = [
     {
         path: "/vendors",
         element: <Vendors />,
+    },
+    {
+        path: "/vendors/:id",
+        element: <ViewVendor />,
     },
     {
         path: "/requests",
