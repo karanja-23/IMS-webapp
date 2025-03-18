@@ -14,7 +14,35 @@ function AddVendor() {
     const [contactPerson, setContactPerson] = useState(false)
     const [paymentDetails, setPaymentDetails] = useState(false) 
     const [confirm, setConfirm] = useState(false)
+    const [vendorData, setVendorData] = useState({
+        businessName: "",
+        businessEmail: "",
+        businessPhone: "",
+        kraPin: "",
+        businessAddress: "",
+        postalAddress: "",
+        city: "",
+        country: "",
+        contactName: "",
+        contactEmail: "",
+        contactPhone: "",
+        bankName: "",
+        accountNumber: "",
+        accountName: "",
+        payBillNumber: "",
+        tillNumber: "",
+    });
     
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setVendorData((prevData) => ({
+            ...prevData,
+            [id]: value,
+        }));
+    };
+    
+
     
     return (
         <div className="main">           
@@ -76,25 +104,25 @@ function AddVendor() {
                 
             </div>
             <div className="container">
-                    {businessDetails ? (
-                        <div className="business-details">
+                    
+                        <div className="business-details" style={{display: businessDetails ? 'block' : 'none'}}>
                             <label htmlFor="name">Name</label>
-                            <input id="name" type="text" placeholder="Enter business name"  required/>
+                            <input value={vendorData.businessName} onChange={handleInputChange} id="businessName" type="text" placeholder="Enter business name"  required/>
                             <label htmlFor="email" >Email</label>
-                            <input id="email" type="email" placeholder="enter business email address" required/>
+                            <input value={vendorData.businessEmail} onChange={handleInputChange} id="businessEmail" type="email" placeholder="enter business email address" required/>
                             <label htmlFor="contact">Phone number</label>
-                            <input id="contact" type="tel" placeholder="enter busuness phone number" required/>
+                            <input value={vendorData.businessPhone} onChange={handleInputChange} id="businessPhone" type="tel" placeholder="enter busuness phone number" required/>
                             <label htmlFor="pin">KRA pin</label>
-                            <input id="pin" type="text" placeholder="enter kra pin" />
+                            <input value={vendorData.kraPin} onChange={handleInputChange} id="kraPin" type="text" placeholder="enter kra pin" />
 
                             <button onClick={() =>{
                                 setBusinessDetails(false)
                                 setAddress(true)
                             }} className="btn">Continue</button>
                         </div>    
-                    ) : null }
-                    {address ? (
-                        <div className="business-details">
+                    
+                    
+                        <div className="business-details" style={{display: address ? 'block' : 'none'}}>
                         <div className="address-back" onClick={() => {
                             setAddress(false)
                             setBusinessDetails(true)
@@ -102,22 +130,22 @@ function AddVendor() {
                             <ArrowBackRoundedIcon />
                         </div>
                         <label htmlFor="address">Address</label>
-                        <input id="address" type="text" placeholder="Enter business address/location"  required/>
+                        <input value={vendorData.businessAddress} onChange={handleInputChange} id="businessAddress" type="text" placeholder="Enter business address/location"  required/>
                         <label htmlFor="code" >Postal address</label>
-                        <input id="code" type="text" placeholder="enter business postal address" required/>
+                        <input value={vendorData.postalAddress} onChange={handleInputChange} id="postalAddress" type="text" placeholder="enter business postal address" required/>
                         <label htmlFor="city">City</label>
-                        <input id="city" type="text" placeholder="enter city name" required/>
+                        <input value={vendorData.city} onChange={handleInputChange} id="city" type="text" placeholder="enter city name" required/>
                         <label htmlFor="country">Country</label>
-                        <input id="country" type="text" placeholder="enter country name" />
+                        <input value={vendorData.country} onChange={handleInputChange} id="country" type="text" placeholder="enter country name" />
 
                         <button onClick={() =>{                            
                             setAddress(false)
                             setContactPerson(true)
                         }} className="btn">Continue</button>
                     </div>                         
-                    ) : null }
-                    {contactPerson ? (
-                        <div className="business-details">
+                   
+                   
+                        <div className="business-details" style={{display: contactPerson ? 'block' : 'none'}}>
                         <div className="address-back" onClick={() => {
                             setContactPerson(false)
                             setAddress(true)                            
@@ -125,20 +153,20 @@ function AddVendor() {
                             <ArrowBackRoundedIcon />
                         </div>
                         <label htmlFor="name">Name</label>
-                        <input id="name" type="text" placeholder="Enter contact person's name"  required/>
+                        <input value={vendorData.contactName} onChange={handleInputChange} id="contactName" type="text" placeholder="Enter contact person's name"  required/>
                         <label htmlFor="email" >Email</label>
-                        <input id="email" type="email" placeholder="enter contact person's email address" required/>
+                        <input value={vendorData.contactEmail} onChange={handleInputChange} id="contactEmail" type="email" placeholder="enter contact person's email address" required/>
                         <label htmlFor="contact">Phone number</label>
-                        <input id="contact" type="text" placeholder="enter contact person's phone number" required/>
+                        <input value={vendorData.contactPhone} onChange={handleInputChange} id="contactPhone" type="text" placeholder="enter contact person's phone number" required/>
 
                         <button onClick={() =>{                            
                             setContactPerson(false)
                             setPaymentDetails(true)
                         }} className="btn">Continue</button>
                     </div>                         
-                    ) : null }         
-                    {paymentDetails ? (
-                        <div className="business-details">
+                            
+                    
+                        <div className="business-details" style={{display: paymentDetails ? 'block' : 'none'}}>
                         <div className="address-back" onClick={() => {
                             setPaymentDetails(false)
                             setContactPerson(true)                            
@@ -146,41 +174,63 @@ function AddVendor() {
                             <ArrowBackRoundedIcon />
                         </div>
                         <label htmlFor="name">Bank name</label>
-                        <input id="name" type="text" placeholder="Enter bank name"  required/>
+                        <input value={vendorData.bankName} onChange={handleInputChange} id="bankName" type="text" placeholder="Enter bank name"  required/>
                         <label htmlFor="account-number" >Account Number</label>
-                        <input id="account-number" type="text" placeholder="Enter account number" required/>
+                        <input value={vendorData.accountNumber} onChange={handleInputChange} id="accountNumber" type="text" placeholder="Enter account number" required/>
                         <label htmlFor="account-name">Account name</label>
-                        <input id="account-name" type="text" placeholder="Enter account name" required/>
+                        <input value={vendorData.accountName} onChange={handleInputChange} id="accountName" type="text" placeholder="Enter account name" required/>
                         <label htmlFor="paybill">Paybill number</label>
-                        <input id="paybill" type="text" placeholder="Enter Mpesa paybill number" />
+                        <input value={vendorData.payBillNumber} onChange={handleInputChange} id="payBillNumber" type="text" placeholder="Enter Mpesa paybill number" />
                         <label htmlFor="till">Till number</label>
-                        <input id="till" type="text" placeholder="Enter Mpesa till number" />
+                        <input value={vendorData.tillNumber} onChange={handleInputChange} id="tillNumber" type="text" placeholder="Enter Mpesa till number" />
 
                         <button onClick={() =>{                          
                             setPaymentDetails(false)
                             setConfirm(true)
                         }} className="btn">Continue</button>
                     </div>                         
-                    ) : null }     
-                    {confirm ? (
-                        <div className="business-details">
+                        
+                   
+                        <div className="business-details" style={{display: confirm ? 'block' : 'none'}}>
                         <div className="address-back" onClick={() => {
                             setConfirm(false)
                            setPaymentDetails(true)                            
                         }}>
                             <ArrowBackRoundedIcon />
                         </div>
-                        <div>
+                        <div className="confirm">
+                            <span className="titles">Business details</span>
+                            <span><strong>Business name:</strong> {vendorData.businessName}</span>
+                            <span><strong>Business email:</strong> {vendorData.businessEmail}</span>
+                            <span><strong>Business phone number:</strong> {vendorData.businessPhone}</span>
+                            <span><strong>KRA pin:</strong> {vendorData.kraPin}</span>
 
-                            
+                            <span className="titles">Adress details</span>
+                            <span><strong>Physical address:</strong>{vendorData.businessAddress}</span>
+                            <span><strong>Postal address:</strong> {vendorData.postalAddress}</span>
+                            <span><strong>City:</strong> {vendorData.city}</span>
+                            <span><strong>Country:</strong> {vendorData.country}</span>
+
+                            <span className="titles">Contact person details</span>
+                            <span><strong>Name:</strong> {vendorData.contactName}</span>
+                            <span><strong>Email:</strong> {vendorData.contactEmail}</span>
+                            <span><strong>Phone number:</strong> {vendorData.contactPhone}</span>
+
+                            <span className="titles">Payment details</span>
+                            <span><strong>Bank name</strong> {vendorData.bankName}</span>
+                            <span><strong>Account name</strong>{vendorData.accountName}</span>
+                            <span><strong>Account number</strong>{vendorData.accountNumber}</span>
+                            <span><strong>Paybill number</strong>{vendorData.payBillNumber}</span>
+                            <span><strong>Till number</strong>{vendorData.tillNumber}</span>
+
                         </div>
 
-                        <button onClick={() =>{                            
-                            setContactPerson(false)
-                            setPaymentDetails(true)
-                        }} className="btn">Continue</button>
+                        <div className="buttons">
+                            <button>Submit</button>
+                            <button>Cancel</button>
+                        </div>
                     </div>                         
-                    ) : null }                                      
+                                                    
                 </div>            
            
         </div>
