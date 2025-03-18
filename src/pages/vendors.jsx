@@ -27,7 +27,7 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import Notification from "../components/notification";
 
 function Vendors() {
-  const LIMIT = 7;
+  const LIMIT = 4;
   const navigate = useNavigate();
   const {
     loggedIn,
@@ -47,9 +47,10 @@ function Vendors() {
   const [actionRowId, setActionRowId] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [vendors, setVendors] = useState([]);
   const theme = useTheme(getTheme());
-  const filteredData = team?.filter((item) =>
-    item.username.toLowerCase().includes(search.toLowerCase())
+  const filteredData = vendors?.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData?.length / LIMIT);
   const paginatedData = filteredData?.slice(
@@ -59,12 +60,12 @@ function Vendors() {
 
   useEffect(() => {
     if (loggedIn) {
-      const storedTeam = localStorage.getItem("team");
-      if (storedTeam) {
-        setTeam(JSON.parse(storedTeam));
+      const storedVendors = localStorage.getItem("vendors");
+      if (storedVendors) {
+        setVendors(JSON.parse(storedVendors));       
         navigate("/vendors");
       } else {
-        fetch("https://mobileimsbackend.onrender.com/users", {
+        fetch("https://mobileimsbackend.onrender.com/vendors", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -73,8 +74,9 @@ function Vendors() {
         })
           .then((response) => response.json())
           .then((data) => {
-            setTeam(data);
-            localStorage.setItem("team", JSON.stringify(data));
+            setVendors(data);
+            localStorage.removeItem("vendors");
+            localStorage.setItem("vendors", JSON.stringify(data));            
             navigate("/vendors");
           });
       }
@@ -92,59 +94,46 @@ function Vendors() {
         })
           .then((response) => response.json())
           .then((data) => {
+            if (data['msg'] === 'Token has expired') {
+              localStorage.removeItem("token");
+              setAccessToken("");
+              setLoggedIn(false);
+              navigate("/login");
+            }
             if (data) {
+            
               setUser(data);
               setLoggedIn(true);
               setIsLoading(false);
             }
           })
           .then(() => {
-            if (roles.length > 0) {
+            if (vendors.length > 0) {
               return;
             }
-            getRoles();
+            getVendors();
           })
-          .then(() => {
-            if (team.length > 0) {
-              return;
-            }
-
-            const storedTeam = localStorage.getItem("team");
-
-            if (storedTeam) {
-              setTeam(JSON.parse(storedTeam));
-            } else {
-              fetch("https://mobileimsbackend.onrender.com/users", {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${data.access_token}`,
-                },
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data) {
-                    setTeam(data);
-                    localStorage.removeItem("team");
-                    localStorage.setItem("team", JSON.stringify(data));
-                  }
-                });
-            }
-          });
+          
+          
       } else {
         navigate("/login");
       }
     }
   }, [loggedIn]);
+useEffect(() => {
+  getVendors();
+},[])
 
 
-  async function getRoles() {
-    fetch("https://mobileimsbackend.onrender.com/roles/all", {
+  async function getVendors() {
+    fetch("https://mobileimsbackend.onrender.com/vendors", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((data) => {
-        setRoles(data);
+        setVendors(data);
+        localStorage.removeItem("vendors");
+        localStorage.setItem("vendors", JSON.stringify(data));
       });
   }
 
@@ -243,9 +232,8 @@ function Vendors() {
                   <Header>
                     <HeaderRow>
                       <HeaderCell>Name</HeaderCell>
-                      <HeaderCell>Email</HeaderCell>
-                      <HeaderCell>Contact</HeaderCell>
-                      <HeaderCell>Role</HeaderCell>
+                      <HeaderCell>Email</HeaderCell>                      
+                      <HeaderCell>Contact Person</HeaderCell>
                       <HeaderCell>action</HeaderCell>
                     </HeaderRow>
                   </Header>
@@ -253,10 +241,9 @@ function Vendors() {
                   <Body>
                     {tableList.map((item) => (
                       <Row key={item.id} item={item}>
-                        <Cell>{item.username}</Cell>
-                        <Cell>{item.email}</Cell>
-                        <Cell>{item.contact}</Cell>
-                        <Cell>{item.role["name"]}</Cell>
+                        <Cell>{item.name}</Cell>
+                        <Cell>{item.email}</Cell>                        
+                        <Cell>{item.contact_person_name}</Cell>
                         <Cell>
                           <MoreVertRoundedIcon
                             onClick={(event) => {

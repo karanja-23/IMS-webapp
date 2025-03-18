@@ -130,15 +130,21 @@
     max-height: 500px;
     font-size: 0.9em;
     
+}.confirm span{
+    margin-left: 20px;
+    margin-top: 10px;
+    color: var(--blue);
+    opacity: 0.8;
 }
 .confirm strong{
     color: var(--black);
     font-weight: 700;
     opacity: 0.65;
+    margin-right: 10px;
 }
 .titles{
     font-weight: 700;
-    margin-bottom: 3px;
+    margin-bottom: 10px;
     color: var(--blue);
     text-decoration: underline;
     opacity: 0.8;
@@ -158,6 +164,9 @@
     font-weight: 800;
     font-size: 0.9em;
     border: none;
-    background-color: var(--orange);
+    background-color: var(--blue);
     opacity: 0.8
+}
+.buttons button:hover{
+    background-color: var(--orange);
 }
