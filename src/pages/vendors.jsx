@@ -92,7 +92,14 @@ function Vendors() {
         })
           .then((response) => response.json())
           .then((data) => {
+            if (data['msg'] === 'Token has expired') {
+              localStorage.removeItem("token");
+              setAccessToken("");
+              setLoggedIn(false);
+              navigate("/login");
+            }
             if (data) {
+            
               setUser(data);
               setLoggedIn(true);
               setIsLoading(false);

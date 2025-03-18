@@ -105,6 +105,12 @@ function Team() {
         })
           .then((response) => response.json())
           .then((data) => {
+            if (data['msg'] === 'Token has expired') {
+              localStorage.removeItem("token");
+              setAccessToken("");
+              setLoggedIn(false);
+              navigate("/login");
+            }
             if (data) {
               setUser(data);
               setLoggedIn(true);
@@ -567,8 +573,8 @@ function Team() {
               onChange={(event) => setRoleId(event.target.value)}
             >
               <option value={0}>Select role</option>
-              {roles.map((role) => (
-                <option value={role.id}>{role.name}</option>
+              {roles.map((role, index) => (
+                <option key={index} value={role.id}>{role.name}</option>
               ))}
             </select>
             <input className="button" type="submit" value="Submit" />
@@ -621,8 +627,8 @@ function Team() {
               onChange={(event) => setNewRoleId(event.target.value)}
             >
               <option value={0}>Select role</option>
-              {roles.map((role) => (
-                <option value={role.id}>{role.name}</option>
+              {roles.map((role, index) => (
+                <option key={index} value={role.id}>{role.name}</option>
               ))}
             </select>
             <input className="button" type="submit" value="Submit" />
