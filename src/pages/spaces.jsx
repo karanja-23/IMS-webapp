@@ -65,7 +65,7 @@ function Spaces() {
 
         if (token){
             setAccessToken(token)
-            fetch(`http://172.236.2.18:5000/users/protected/user`, {
+            fetch(`https://mobileimsbackend.onrender.com/protected/user`, {
                 method: "GET",
                 headers: {
                   Authorization: `Bearer ${token}`,
