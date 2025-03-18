@@ -8,7 +8,8 @@ export default defineConfig({
     host: '0.0.0.0',
     strictPort: true,
     port: 8000,
-    cors: true
+    cors: true,
+    allowedHosts: ['ims-zijf.onrender.com']
     },
 
 })
