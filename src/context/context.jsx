@@ -6,7 +6,7 @@ const AppProvider = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [user, setUser] = useState({});
     const [accessToken, setAccessToken] = useState("");
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [team, setTeam] = useState([]);
     const [roles, setRoles] = useState([])
 

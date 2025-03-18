@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    --blue: #07013A;
+    --orange: #FC4F11;
+    --white: #FFFFFF;
+    --black: #000000;
+    --grey: #707070;
+    --darkerShade: #333;
+    font-family: poppins;
+}
+.profiles {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;  
+  padding: 40px;
+  margin: 40px auto;
+  gap: 50px;
+  background: #fff;
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+  opacity: 0.6;
+}
+
+.profile-details {
+  display: flex;  
+  gap: 60px;  
+  border-radius: 12px;
+ 
+}
+.profile-details span {
+  display: flex;
+  flex-direction: column; 
+  gap: 5pxsss;
+  font-size: 0.9rem;
+  color: var(--blue);
+  padding: 5px 10px;
+  border-radius: 8px;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+.profile-details strong {
+  color: var(--blue);
+  opacity: 0.7;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.back-button {
+    cursor: pointer;
+    margin-left: 30px;
+    margin-top: 40px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    color: var(--blue);
+    transition: color 0.3s ease;
+  }
+  
+  .back-button:hover {
+    color: var(--orange)
+  }
+ 

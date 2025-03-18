@@ -22,10 +22,10 @@ import { getTheme } from "@table-library/react-table-library/baseline";
 import { ToastContainer, toast } from "react-toastify";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { width } from "@fortawesome/free-brands-svg-icons/fa42Group";
+import Notification from "../components/notification";
 
 function Permissions() {
-  const LIMIT = 9;
+  const LIMIT = 5;
   const navigate = useNavigate();
   const {
     loggedIn,
@@ -101,6 +101,17 @@ function Permissions() {
       }
     }
   }, [loggedIn]);
+  useEffect(() => {
+    if (roles.length > 0) {
+      return;
+    }
+    const myRoles = localStorage.getItem("roles");
+    if (myRoles) {
+      setRoles(JSON.parse(myRoles));
+    }
+    getPermissions();
+    getRoles();
+  },[])
   async function getPermissions() {
     fetch("https://mobileimsbackend.onrender.com/permissions/all", {
       method: "GET",
@@ -116,10 +127,15 @@ function Permissions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setRoles(data);
-        localStorage.setItem("roles", JSON.stringify(data));
-      });
+        console.log(data);
+        setRoles(data); 
+        localStorage.removeItem("roles");
+        localStorage.setItem("roles", JSON.stringify(data));      
+      })
+
+
   }
+  
   function addRole(event) {
     event.preventDefault();
     fetch("https://mobileimsbackend.onrender.com/roles", {
@@ -165,8 +181,10 @@ function Permissions() {
       })
 
       .then(() => {
+       setTimeout(() => {
         getRoles();
-        setSelectedPermissions([]);
+       }, 1000);
+    
       })
       .then(() => {
         toast("Role added successfully", {
@@ -227,9 +245,16 @@ function Permissions() {
       })
       .then(() => {
         getRoles();
+        setActionRowId(null);
       });
   }
+  useEffect(() => {
+    getPermissions();
+    getRoles();
+  }, []);
+
   function editRole(event) {
+    getRoles();
     event.preventDefault();
     fetch("https://mobileimsbackend.onrender.com/role_permission", {
       method: "PATCH",
@@ -267,92 +292,59 @@ function Permissions() {
   }
   return (
     <>
-      <div className="main" style={{ opacity: addUser ? 0.4 : 0.99 }}>
-        <ToastContainer />
-        <SidebarComponent />
-        <div
-          className="content"
-          style={{
-            boxSizing: "border-box",
-            width: isOpen ? "calc(100vw - 210px)" : "calc(100vw - 70px)",
-            left: isOpen ? 202 : 62,
-            transition: "0.3s",
-          }}
-        >
-          <div className="header">
-            <div className="title">
-              <WorkspacesRoundedIcon style={{ marginRight: "10px" }} />
-              <h2>Permissions</h2>
-            </div>
-            <div className="notification">
-              <CircleNotificationsRoundedIcon
-                style={{ marginRight: "10px", fontSize: "1.9rem" }}
-              />
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              marginLeft: "5%",
-              flexDirection: "column",
-              maxWidth: "90%",
-              opacity: "0.8",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                margin: "50px 0px 40px 10px",
-                justifyContent: "space-between",
-              }}
-            >
-              <input
-                type="search"
-                placeholder="search ..."
-                value={search}
-                onChange={handleSearch}
-                style={{
-                  width: "25%",
-                  padding: "7px 12px",
-                  opacity: "0.9",
-                  outline: "none",
-                  border: "1px solid #ccc",
-                  borderRadius: "5px",
-                  backgroundColor: "#f5f5f5",
-                  fontSize: "14px",
-                  transition: "all 0.3s ease-in-out",
-                }}
-              ></input>
-              <div
-                onClick={() => {
-                  setAddUser(true);
-                }}
-                style={{
-                  display: "flex",
-                  cursor: "pointer",
-                  justifyItems: "center",
-                  alignItems: "center",
-                  gap: "3px",
-                  backgroundColor: "#FC4F11",
-                  color: "white",
-                  padding: "5px 8px",
-                  fontWeight: "600",
-                  opacity: "0.9",
-                  borderRadius: "3px",
-                }}
-              >
-                <ControlPointRoundedIcon />
-                add new Role
-              </div>
-            </div>
+    <div className="main" style={{opacity: addUser ? 0.4 : 0.99}}> 
+               
+               <SidebarComponent />
+               <ToastContainer />   
+               <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s',}} >
+               
+                   <div className="header">
+                       <div className="title">
+                          
+                           <h2>Permissions</h2>
+                           
+                       </div>
+                       <Notification />
+       
+                   </div>
+       
+                   <div style={{display: 'flex', marginLeft:'20%',flexDirection:'column' ,maxWidth:'60%',opacity: '0.8'}}> 
+       
+                     <div style={{display: 'flex', alignItems: 'center' ,margin: "50px 0px 40px 10px", justifyContent: 'space-between'}}>
+                     <input
+                       type="search"
+                       placeholder="search ..."
+                       value={search}
+                       onChange={handleSearch}
+                       style={{
+                         width: '25%',
+                         padding: '7px 12px',
+                         opacity: '0.9',
+                         outline: 'none',
+                         border: '1px solid #ccc', 
+                         borderRadius: '5px', 
+                         backgroundColor: '#f5f5f5',
+                         fontSize: '14px',
+                         transition: 'all 0.3s ease-in-out'
+                     }}
+                     >
+                     
+                     </input>
+                     <div onClick={()=> {
+                       setAddUser(true)
+                     }} style={{display:'flex', cursor: 'pointer',justifyItems:'center', alignItems:'center',gap: '3px',backgroundColor:'#FC4F11', color:'white', padding:"5px 8px", fontWeight:'600', opacity:'0.9', borderRadius: "3px"}}>
+                       <ControlPointRoundedIcon />
+                       add new Role
+       
+                     </div>
+                     </div>
+                     
 
             <Table
               data={{ nodes: paginatedData }}
               theme={theme}
               className="table"
-              style={{ width: "50%", display: "flex", boxSizing: "border-box" }}
+              style={{ width: "100%", display: "flex", boxSizing: "border-box" }}
             >
               {(tableList) => (
                 <div
@@ -377,7 +369,8 @@ function Permissions() {
                         item={item}
                         style={{ display: "contents" }}
                       >
-                        <Cell>{index + 1}</Cell>
+                        <Cell>{currentPage * LIMIT + index + 1}</Cell>
+
                         <Cell>{item.name}</Cell>
 
                         <Cell>
@@ -398,6 +391,7 @@ function Permissions() {
                                 onClick={() => {
                                   setRoleName(item.name);
                                   setRoleId(item.id);
+                                  {console.log(item.permissions)}
                                   setSelectedPermissions(
                                     item.permissions.map((perm) => perm.id)
                                   );
@@ -516,6 +510,9 @@ function Permissions() {
             onClick={() => {
               setEditPermission(false);
               setActionRowId(null);
+              setRoleName("");
+              setRoleId("");
+              setSelectedPermissions([]);
             }}
             className="close-btn"
           />
