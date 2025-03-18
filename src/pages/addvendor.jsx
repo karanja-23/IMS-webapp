@@ -6,15 +6,18 @@ import Notification from "../components/notification";
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import "../CSS/addVendor.css"
-
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function AddVendor() {
+    const navigate = useNavigate()
     const {isOpen} = useContext(AppContext)
     const [businessDetails, setBusinessDetails] = useState(true)
     const [address, setAddress] = useState(false)
     const [contactPerson, setContactPerson] = useState(false)
     const [paymentDetails, setPaymentDetails] = useState(false) 
     const [confirm, setConfirm] = useState(false)
-    const [vendorData, setVendorData] = useState({
+    
+    const initialVendorData = {
         businessName: "",
         businessEmail: "",
         businessPhone: "",
@@ -31,9 +34,12 @@ function AddVendor() {
         accountName: "",
         payBillNumber: "",
         tillNumber: "",
-    });
+    };
+    const [vendorData, setVendorData] = useState(initialVendorData);
     
-
+    function handleReset() {
+        setVendorData(initialVendorData);
+    }
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setVendorData((prevData) => ({
@@ -42,11 +48,81 @@ function AddVendor() {
         }));
     };
     
+    function handleSubmit(e){
+        e.preventDefault();
+        const newVendor = {
+            name:vendorData.businessName,
+            email:vendorData.businessEmail,
+            contact : vendorData.businessPhone,
+            kra_pin :vendorData.kraPin,
+            address:vendorData.businessAddress,
+            postal_code:vendorData.postalAddress,
+            city:vendorData.city,
+            bank_name:vendorData.bankName,
+            account_name:vendorData.accountName,
+            account_number:vendorData.accountNumber,
+            country:vendorData.country,
+            paybill_number:vendorData.payBillNumber,
+            till_number:vendorData.tillNumber,
+            contact_person_name:vendorData.contactName,
+            contact_person_email: vendorData.contactEmail,
+            contact_person_contact: vendorData.contactPhone
 
-    
+        }
+        fetch('https://mobileimsbackend.onrender.com/vendors',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newVendor)       
+        })
+        .then(response => {
+            console.log(response)
+            return response.json()
+        })
+        .then(data => {
+            console.log(data)
+            if(data["message"] === "Vendor created successfully"){
+                toast("Vendor created successfully",{
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    className: "toast-message",
+                    bodyClassName: "toast-message-body",
+                });
+                
+                setTimeout(() => {
+                    navigate("/vendors")
+                },1500);
+                
+            }
+            else{
+                toast("Vendor creation failed",{
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    className: "toast-message",
+                    bodyClassName: "toast-message-body",
+                });
+            }
+        })
+    }
+
+      
     return (
         <div className="main">           
         <SidebarComponent />
+        <ToastContainer />
         <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s'}} >
             <div className="header">
                 <div className="title">                
@@ -217,17 +293,21 @@ function AddVendor() {
                             <span><strong>Phone number:</strong> {vendorData.contactPhone}</span>
 
                             <span className="titles">Payment details</span>
-                            <span><strong>Bank name</strong> {vendorData.bankName}</span>
-                            <span><strong>Account name</strong>{vendorData.accountName}</span>
-                            <span><strong>Account number</strong>{vendorData.accountNumber}</span>
-                            <span><strong>Paybill number</strong>{vendorData.payBillNumber}</span>
-                            <span><strong>Till number</strong>{vendorData.tillNumber}</span>
+                            <span><strong>Bank name:</strong> {vendorData.bankName}</span>
+                            <span><strong>Account name:</strong>{vendorData.accountName}</span>
+                            <span><strong>Account number:</strong>{vendorData.accountNumber}</span>
+                            <span><strong>Paybill number:</strong>{vendorData.payBillNumber}</span>
+                            <span><strong>Till number:</strong>{vendorData.tillNumber}</span>
 
                         </div>
 
-                        <div className="buttons">
-                            <button>Submit</button>
-                            <button>Cancel</button>
+                        <div className="buttons">                            
+                            <button onClick={() =>{
+                                setConfirm(false)
+                                handleReset()
+                                setBusinessDetails(true)
+                            }} >Cancel</button>
+                            <button onClick={handleSubmit}>Submit</button>
                         </div>
                     </div>                         
                                                     

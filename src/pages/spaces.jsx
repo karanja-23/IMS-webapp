@@ -427,7 +427,7 @@ function Spaces() {
             {editSpace ? (
           <div className="add_user_modal">
             <ToastContainer />
-            <h3 style={{opacity:"0.75"}}>Edit user</h3>
+            <h3 style={{opacity:"0.75"}}>Edit space</h3>
             <CloseRoundedIcon onClick={()=> setEditSpace(false)}  className="close-btn" />
             <form onSubmit={handleEditSpace}>
               <label htmlFor="name" >Name</label>
