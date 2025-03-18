@@ -11,7 +11,7 @@ function Home() {
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
       if (loggedIn) {
-        console.log('logged in')
+      
         navigate("/");
       }   
       else {

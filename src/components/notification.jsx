@@ -13,7 +13,7 @@ function Notification() {
     };
     return (
         <div className="notification">
-        <span style={{fontSize: '0.9rem'}} >{getGreeting()}, {user.name?.split(' ')[0]} 👋</span>
+        <span style={{fontSize: '0.9rem'}} >{getGreeting()}, {user.username?.split(' ')[0]} 👋</span>
             <CircleNotificationsRoundedIcon style={{marginRight: '10px', fontSize: '1.9rem'}}/>
             
         </div>
