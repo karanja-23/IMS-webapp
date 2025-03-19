@@ -112,3 +112,7 @@
     padding-top: 70px;
     
 }
+textarea:focus{
+  outline-color: var(--orange);
+  opacity: 0.5;
+}
