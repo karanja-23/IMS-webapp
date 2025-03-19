@@ -52,13 +52,13 @@ function FixedAssets() {
   const [newPassword, setNewPassword] = useState("");
   const [roleId, setRoleId] = useState("");
   const [newRoleId, setNewRoleId] = useState("");
-  const [editSpace, setEditSpace] = useState(false);
+  const [editAsset, setEditAsset] = useState(false);
   const [newStatus, setNewStatus] = useState("");
   const [search, setSearch] = useState("");
   const [actionRowId, setActionRowId] = useState(null);
   const key = "Composed Table";
   const [currentPage, setCurrentPage] = useState(0);
-  const [currentSpaceId, setCurrentSpaceId] = useState(null);
+  const [currentAssetId, setCurrentAssetId] = useState(null);
   const [spaces, setSpaces] = useState([]);
   const [vendors, setVendors] = useState([])
   const [categories, setCategories] = useState([])
@@ -119,15 +119,7 @@ function FixedAssets() {
     }
   }, [loggedIn]);
   useEffect(() => {
-    getCategories()
-    getSpaces()
-    getVendors()
-    const currentAssets = localStorage.getItem("assets");
-    if (currentAssets) {
-      setSpaces(JSON.parse(currentAssets));
-      
-    }
-    getAssets();
+    Promise.all([getAssets(), getCategories(), getSpaces(), getVendors()]);
   }, []);
   async function getAssets() {
     fetch("https://mobileimsbackend.onrender.com/assets", {
@@ -242,15 +234,26 @@ function FixedAssets() {
    
     }
     event.target.reset()
+    resetState()
   
+  }
+  function resetState(){
+    setName('')
+    setDate('')
+    setCost('')
+    setDescription('')
+    setSerialNumber('')
+    setSpaceId('')
+    setVendorId('')
+    setCategoryId('')
   }
   function handleSearch(event) {
     setSearch(event.target.value);
     setCurrentPage(0);
   }
-  function showEditSpace(id) {
-    setCurrentSpaceId(id);
-    fetch(`https://mobileimsbackend.onrender.com/spaces/${id}`, {
+  function showEditAsset(id) {
+    setCurrentAssetId(id);
+    fetch(`https://mobileimsbackend.onrender.com/assets/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -259,36 +262,49 @@ function FixedAssets() {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
-          setNewName(data.name);
-          setNewLocation(data.location);
-          setNewDescription(data.description);
-          setNewStatus(data.status);
+            const formattedDate = new Date(data.purchase_date).toISOString().split("T")[0]
+
+            setName(data.name)
+            setDate(formattedDate)
+            setCost(data.purchase_cost)
+            setDescription(data.description)
+            setSerialNumber(data.serial_number)
+            setSpaceId(data.space.id)
+            setVendorId(data.vendor.id)
+            setCategoryId(data.category.id)
+            console.log(data.purchase_date)
         }
       })
       .then(() => {
         setActionRowId(null);
-        setEditSpace(true);
+        setEditAsset(true);
+        
       });
   }
-  function handleEditSpace(event) {
+  function handleEditAsset(event) {
     event.preventDefault();
-    const editSpace = {
-      name: newName,
-      location: newLocation,
-      description: newDescription,
-      status: newStatus,
-    };
+    const editAsset = {
+        name: name,
+        purchase_date:date,
+        purchase_cost:cost,
+        description:description,
+        serial_number: serialNumber,
+        space_id:Number(spaceId),
+        vendor_id:Number(vendorId),
+        category_id:Number(categoryId)     
 
-    fetch(`https://mobileimsbackend.onrender.com/spaces/${currentSpaceId}`, {
+      };
+
+    fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(editSpace),
+      body: JSON.stringify(editAsset),
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data["status"]) {
+        if (data["message"] === 'Asset updated') {
           toast("User updated successfully", {
             position: "top-center",
             autoClose: 3000,
@@ -306,11 +322,8 @@ function FixedAssets() {
       .then(() => {
         getAssets();
         setTimeout(() => {
-          setEditSpace(false);
-          setNewName("");
-          setNewLocation("");
-          setNewDescription("");
-          setNewStatus("");
+          setEditAsset(false);
+          resetState()
         }, 2000);
       });
   }
@@ -464,7 +477,7 @@ function FixedAssets() {
                           />
                           {actionRowId === item.id ? (
                             <div className="action-modal">
-                              <span onClick={() => showEditSpace(item.id)}>
+                              <span onClick={() => showEditAsset(item.id)}>
                                 <EditRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />
@@ -592,50 +605,95 @@ function FixedAssets() {
           </form>
         </div>
       ) : null}
-      {editSpace ? (
+      {editAsset ? (
         <div className="add_user_modal">
           <ToastContainer />
           <h3 style={{ opacity: "0.75" }}>Edit space</h3>
           <CloseRoundedIcon
-            onClick={() => setEditSpace(false)}
+            onClick={() => {
+                setEditAsset(false)
+                resetState()
+            }}
             className="close-btn"
           />
-          <form onSubmit={handleEditSpace}>
+          <form onSubmit={handleEditAsset}>
             <label htmlFor="name">Name</label>
             <input
               id="name"
-              onChange={(event) => setNewName(event.target.value)}
-              value={newName}
+              onChange={(event) => setName(event.target.value)}
+              value={name}
               type="text"
-              placeholder="Name"
+              placeholder="enter asset name"
             />
-            <label htmlFor="location">Email</label>
+            <label htmlFor="category">Category</label>
+            <select value={categoryId} id="category" onChange={(event)=>setCategoryId(event.target.value)} >
+                <option value={0}>Select asset category</option>
+                {categories?.map((category, index) => (
+                    <option key={index} value={category.id}>{category.name}</option>
+
+                ))}
+            </select>
+            <label htmlFor="serial">Serial number</label>
             <input
-              id="location"
-              onChange={(event) => setNewLocation(event.target.value)}
-              value={newLocation}
+              id="serial"
+              onChange={(event) => setSerialNumber(event.target.value)}
+              value={serialNumber}
               type="text"
-              placeholder="Location"
+              placeholder="enter serial number"
             />
-            <label htmlFor="description">Contact</label>
+            <label htmlFor="date">Purchase date</label>
             <input
+              id="date"
+              onChange={(event) => setDate(event.target.value)}
+              value={date}
+              type="date"
+            />
+            <label htmlFor="cost">Purchase cost</label>
+            <input
+              id="cost"
+              onChange={(event) => setCost(event.target.value)}
+              value={cost}
+              type="number"
+              placeholder="enter asset cost"
+            />
+
+            <label htmlFor="space">Current Location</label>
+            <select value={spaceId} id="space" onChange={(event)=>setSpaceId(event.target.value)}>
+                <option value={0}>Select space</option>
+                {spaces?.map((space,index) =>(
+                    <option value={space.id} key={index}>{space.name}</option>
+                )) }
+            </select>
+            <label htmlFor="vendors">Vendor</label>
+            <select value={vendorId} id="vendors" onChange={(event) => setVendorId(event.target.value)}>
+                <option value={0}>Select vendor</option>
+                {vendors?.map((vendor,index) =>(
+                    <option value={vendor.id} key={index}>{vendor.name}</option>
+                )) }
+            </select>
+
+            <label htmlFor="description">Description</label>
+            <textarea
               id="description"
-              onChange={(event) => setNewDescription(event.target.value)}
-              value={newDescription}
-              type="text"
-              placeholder="Description"
-            />
-            <label htmlFor="status">Status</label>
-            <input
-              id="status"
-              onChange={(event) => setNewStatus(event.target.value)}
-              value={newStatus}
-              type="text"
-              placeholder="Status"
-            />
+              className="desc"
+              onChange={(event) => setDescription(event.target.value)}
+              value={description}
+              placeholder="Enter asset description..."
+              rows={4}
+              style={{
+                width: "100%",
+                minHeight: "100px",
+                resize: "vertical",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                fontSize: "16px",
+              }}
+            ></textarea>
 
             <input className="button" type="submit" value="Submit" />
           </form>
+          
         </div>
       ) : null}
     </>
