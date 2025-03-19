@@ -142,7 +142,33 @@ useEffect(() => {
     setSearch(event.target.value);
     setCurrentPage(0);
   }
- 
+  function handleDelete(id){
+    fetch(`https://mobileimsbackend.onrender.com/vendors/${id}`,{
+      method: 'DELETE',
+      headers: {
+          "Content-Type": "application/json"
+      },
+     
+  })
+  .then(response => response.json())
+  .then((body) =>{
+    if (body["messge"] ='Vendor deleted'){
+      toast("Vendor deleted succesfully", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        className: "toast-message",
+        bodyClassName: "toast-message-body",
+      });
+      getVendors()
+    }
+  })
+  }
  
   return (
     <>
@@ -158,7 +184,7 @@ useEffect(() => {
             transition: "0.3s",
           }}
         >
-          <div className="header">
+           <div className="header" style={{width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',transition: '0.3s'}}>
             <div className="title">
               <h2>Vendors</h2>
             </div>
@@ -268,7 +294,7 @@ useEffect(() => {
                                 />
                                 edit
                               </span>
-                              <span onClick={() => handleDeleteUser(item.id)}>
+                              <span onClick={() => handleDelete(item.id)}>
                                 <DeleteRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />

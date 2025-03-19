@@ -298,7 +298,7 @@ function Permissions() {
                <ToastContainer />   
                <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s',}} >
                
-                   <div className="header">
+                   <div className="header" style={{width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',transition: '0.3s'}}>
                        <div className="title">
                           
                            <h2>Permissions</h2>
