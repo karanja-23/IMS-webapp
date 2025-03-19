@@ -308,7 +308,7 @@ function Permissions() {
        
                    </div>
        
-                   <div style={{display: 'flex', marginLeft:'20%',flexDirection:'column' ,maxWidth:'60%',opacity: '0.8'}}> 
+                   <div style={{display: 'flex', marginLeft:'20%',flexDirection:'column' ,maxWidth:'60%',opacity: '0.8',paddingTop:'70px'}}> 
        
                      <div style={{display: 'flex', alignItems: 'center' ,margin: "50px 0px 40px 10px", justifyContent: 'space-between'}}>
                      <input

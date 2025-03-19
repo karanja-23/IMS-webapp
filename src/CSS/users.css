@@ -55,10 +55,14 @@
   font-weight: 700;
   font-size: 1rem;
 }
-.back-button {
-    cursor: pointer;
+.back-button-container {
+    display: flex;
+    align-items: center;
     margin-left: 30px;
     margin-top: 40px;
+  }
+.back-button {
+    cursor: pointer;    
     font-weight: 600;
     display: flex;
     align-items: center;

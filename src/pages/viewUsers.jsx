@@ -45,10 +45,14 @@ function ViewUsers() {
                        
 
             </div>
-            <div className="back-button " onClick={() => window.history.back()} >
-                <ArrowBackIosRoundedIcon style={{marginRight: '10px', fontSize: '1.3rem'}}/>
-                <span style={{fontSize: '0.97rem'}} >back</span>
+            <div className="back-button-container " >
+            <div className="back-button "  onClick={() => window.history.back()}>
+            <ArrowBackIosRoundedIcon
+            style={{ marginRight: "10px", fontSize: "1.3rem" }}
+          />
+          <span style={{ fontSize: "0.97rem" }}>back</span>             
             </div>
+        </div>
             {loading ? (<Loading />) : 
               <div className="profiles">
 

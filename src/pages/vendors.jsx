@@ -172,6 +172,7 @@ useEffect(() => {
               flexDirection: "column",
               maxWidth: "90%",
               opacity: "0.8",
+              paddingTop: "70px",
             }}
           >
             <div
@@ -261,7 +262,7 @@ useEffect(() => {
                                 />
                                 view
                               </span>
-                              <span onClick={() => showEditUser(item.id)}>
+                              <span onClick={() => navigate(`/vendors/edit/${item.name}`,{state:{id:item.id}})}>
                                 <EditRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />

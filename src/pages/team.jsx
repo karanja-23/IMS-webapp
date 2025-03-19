@@ -395,6 +395,7 @@ function Team() {
               flexDirection: "column",
               maxWidth: "90%",
               opacity: "0.8",
+              paddingTop: "70px",
             }}
           >
             <div

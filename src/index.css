@@ -1,110 +1,114 @@
-.content{
-    position: absolute;
-    top: 0;
-    height: 100vh;
+.content {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+ 
 }
 .header {
-   
-    width: 100%;
-    height: 7vh;
-    background-color: #f7f7f7;
-    box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.25); 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    box-sizing: border-box;
-    z-index: 9;
+  position: fixed;
+  width: 100%;
+  height: 7vh;
+  background-color: #f7f7f7;
+  box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+  z-index: 9;
+  
 }
-.title{
-    display: flex;
-    align-items: center;
-    color: var(--orange);
-    opacity: 0.6;
-    font-weight: 600;
-    padding-left: 10px;
+.title {
+  display: flex;
+  align-items: center;
+  color: var(--orange);
+  opacity: 0.6;
+  font-weight: 600;
+  padding-left: 10px;
 }
 .custom-toast {
-    position: fixed !important; /* Ensure it stays fixed */
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important; /* Centering */
-    
-    width: 300px !important;
-    text-align: center !important;
-    background-color: var(--white) !important;
-    color: var(--blue) !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-    padding: 15px !important;
-    z-index: 9999 !important; /* Make sure it's on top */
-    opacity: 1 !important;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) !important;
+  position: fixed !important; /* Ensure it stays fixed */
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important; /* Centering */
+
+  width: 300px !important;
+  text-align: center !important;
+  background-color: var(--white) !important;
+  color: var(--blue) !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 15px !important;
+  z-index: 9999 !important; /* Make sure it's on top */
+  opacity: 1 !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) !important;
 }
 
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffffff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    
-    margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+
+  margin-bottom: 20px;
 }
 
-.table th, 
+.table th,
 .table td {
-    padding: 12px 15px;
-    text-align: left;
+  padding: 12px 15px;
+  text-align: left;
 }
 
 .table th {
-    background-color: var(--blue);
-    color: #ffffff;
-    font-weight: bold;
-    text-transform: uppercase;
-    opacity: 0.95;
+  background-color: var(--blue);
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.95;
 }
 .table td {
-    border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
 }
 .action-modal span:hover {
-    background: var(--darkerShade);
-    color: var(--white);
-  }
-  
+  background: var(--darkerShade);
+  color: var(--white);
+}
 
 .action-modal {
-    position: absolute;
-    font-size: 0.99em;
-    background-color: var(--white);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;   
-    z-index: 10;
-    margin-left: 10px;
-    gap: 4px;
-  }
-.action-modal span{
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    gap: 7px;
-    opacity: 1;
-    z-index: 20;
-    border-bottom: #e0e0e0 1px solid;
+  position: absolute;
+  font-size: 0.99em;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  z-index: 10;
+  margin-left: 10px;
+  gap: 4px;
+}
+.action-modal span {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  gap: 7px;
+  opacity: 1;
+  z-index: 20;
+  border-bottom: #e0e0e0 1px solid;
 }
 .notification {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-  }
-  .notification span {
-    color: var(--blue);
-    font-weight: 600;
-    opacity: 0.8;
-  }
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.notification span {
+  color: var(--blue);
+  font-weight: 600;
+  opacity: 0.8;
+}
+.back-button {
+    padding-top: 70px;
+    
+}
