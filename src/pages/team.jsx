@@ -381,7 +381,7 @@ function Team() {
             transition: "0.3s",
           }}
         >
-          <div className="header">
+           <div className="header" style={{width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',transition: '0.3s'}}>
             <div className="title">
               <h2>Users</h2>
             </div>
@@ -395,6 +395,7 @@ function Team() {
               flexDirection: "column",
               maxWidth: "90%",
               opacity: "0.8",
+              paddingTop: "70px",
             }}
           >
             <div

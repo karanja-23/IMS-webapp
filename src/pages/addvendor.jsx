@@ -77,11 +77,11 @@ function AddVendor() {
             body: JSON.stringify(newVendor)       
         })
         .then(response => {
-            console.log(response)
+           
             return response.json()
         })
         .then(data => {
-            console.log(data)
+           
             if(data["message"] === "Vendor created successfully"){
                 toast("Vendor created successfully",{
                     position: "top-center",
@@ -124,7 +124,7 @@ function AddVendor() {
         <SidebarComponent />
         <ToastContainer />
         <div className="content" style={{boxSizing:'border-box',width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',left: isOpen ? 202 : 62, transition: '0.3s'}} >
-            <div className="header">
+        <div className="header" style={{width: isOpen ? 'calc(100vw - 210px)' : 'calc(100vw - 70px)',transition: '0.3s'}}>
                 <div className="title">                
                     <h3>add new vendor</h3>
                     
@@ -132,10 +132,14 @@ function AddVendor() {
                <Notification />
 
             </div>
-            <div className="back-button " onClick={() => window.history.back()} >
-                <ArrowBackIosRoundedIcon style={{marginRight: '10px', fontSize: '1.3rem'}}/>
-                <span style={{fontSize: '0.97rem'}} >back</span>
+            <div className="back-button-container " >
+            <div className="back-button "  onClick={() => window.history.back()}>
+            <ArrowBackIosRoundedIcon
+            style={{ marginRight: "10px", fontSize: "1.3rem" }}
+          />
+          <span style={{ fontSize: "0.97rem" }}>back</span>             
             </div>
+        </div>
             <div className="add-vendor">
                 <div className="vendor-form">
                    <div className="menu">
