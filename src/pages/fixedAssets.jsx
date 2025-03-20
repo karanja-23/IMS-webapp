@@ -4,10 +4,12 @@ import { AppContext } from "../context/context";
 import WorkspacesRoundedIcon from "@mui/icons-material/WorkspacesRounded";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import { useNavigate } from "react-router-dom";
+import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
-
+import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import "../CSS/assets.css"
 import {
   Table,
   Header,
@@ -68,11 +70,11 @@ function FixedAssets() {
   const [categoryId,setCategoryId] =useState('')
   
   const theme = useTheme(getTheme());
-  const filteredData = assets.filter((item) =>
+  const filteredData = assets?.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData.length / LIMIT);
-  const paginatedData = filteredData.slice(
+  const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
     (currentPage + 1) * LIMIT
   );
@@ -272,7 +274,7 @@ function FixedAssets() {
             setSpaceId(data.space.id)
             setVendorId(data.vendor.id)
             setCategoryId(data.category.id)
-            console.log(data.purchase_date)
+            
         }
       })
       .then(() => {
@@ -477,6 +479,18 @@ function FixedAssets() {
                           />
                           {actionRowId === item.id ? (
                             <div className="action-modal">
+                                <span onClick={() => showEditAsset(item.id)}>
+                                <AssignmentIndRoundedIcon 
+                                  style={{ fontSize: "1.3em" }}
+                                />
+                                assign
+                              </span>
+                              <span onClick={(() => navigate(`/fixedAssets/${item.name}`,{state:{id:item.id}}))}>
+                                <RemoveRedEyeRoundedIcon
+                                  style={{ fontSize: "1.3em" }}
+                                />
+                                view
+                              </span>
                               <span onClick={() => showEditAsset(item.id)}>
                                 <EditRoundedIcon
                                   style={{ fontSize: "1.3em" }}
@@ -606,7 +620,7 @@ function FixedAssets() {
         </div>
       ) : null}
       {editAsset ? (
-        <div className="add_user_modal">
+        <div className="add_asset_modal">
           <ToastContainer />
           <h3 style={{ opacity: "0.75" }}>Edit space</h3>
           <CloseRoundedIcon
@@ -617,6 +631,8 @@ function FixedAssets() {
             className="close-btn"
           />
           <form onSubmit={handleEditAsset}>
+            <div  className="form-container" style={{display: 'flex',gap:'40px'}}>
+            <div className="form-groups">
             <label htmlFor="name">Name</label>
             <input
               id="name"
@@ -641,13 +657,10 @@ function FixedAssets() {
               type="text"
               placeholder="enter serial number"
             />
-            <label htmlFor="date">Purchase date</label>
-            <input
-              id="date"
-              onChange={(event) => setDate(event.target.value)}
-              value={date}
-              type="date"
-            />
+
+            </div>
+
+            <div className="form-groups">
             <label htmlFor="cost">Purchase cost</label>
             <input
               id="cost"
@@ -656,7 +669,13 @@ function FixedAssets() {
               type="number"
               placeholder="enter asset cost"
             />
-
+            <label htmlFor="date">Purchase date</label>
+            <input
+              id="date"
+              onChange={(event) => setDate(event.target.value)}
+              value={date}
+              type="date"
+            />
             <label htmlFor="space">Current Location</label>
             <select value={spaceId} id="space" onChange={(event)=>setSpaceId(event.target.value)}>
                 <option value={0}>Select space</option>
@@ -664,7 +683,8 @@ function FixedAssets() {
                     <option value={space.id} key={index}>{space.name}</option>
                 )) }
             </select>
-            <label htmlFor="vendors">Vendor</label>
+
+            <label htmlFor="vendors">Select Vendor</label>
             <select value={vendorId} id="vendors" onChange={(event) => setVendorId(event.target.value)}>
                 <option value={0}>Select vendor</option>
                 {vendors?.map((vendor,index) =>(
@@ -672,6 +692,10 @@ function FixedAssets() {
                 )) }
             </select>
 
+            </div>
+                        
+            </div>
+            
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -691,7 +715,7 @@ function FixedAssets() {
               }}
             ></textarea>
 
-            <input className="button" type="submit" value="Submit" />
+            <input className="button" type="submit" style={{width: '60%'}} value="Submit" />
           </form>
           
         </div>

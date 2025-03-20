@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    --blue: #07013A;
+    --orange: #FC4F11;
+    --white: #FFFFFF;
+    --black: #000000;
+    --grey: #707070;
+    --darkerShade: #333;
+    font-family: poppins;
+    --darkGrey: #756b6b;
+}
+
+
+.add_asset_modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;    
+    width: 70vw;
+    max-width: 900px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);    
+    margin: auto;
+}
+
+.add_asset_modal h3 {
+    text-align: center;
+    font-size: 22px;
+    color: var(--darkerShade);
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 22px;
+    color:var(--black);
+    transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+    color: var(--orange);
+}
+
+.add_asset_modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-groups {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    width: fit-content;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.add_asset_modal label {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--grey);
+    margin-bottom: -10px;
+   
+}
+.add_asset_modal select{
+    width: 70%;
+    padding: 7px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: border 0.2s ease;
+}
+.add_asset_modal input,
+.add_asset_modal textarea {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: border 0.2s ease;
+}
+
+.add_asset_modal input:focus,
+.add_asset_modal select:focus,
+.add_asset_modal textarea:focus {
+    border-color: var(--orange);
+    outline: none;
+}
+
+.add_asset_modal textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.button {
+    
+    background: var(--orange);
+    color: var(--white);
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    opacity: 0.8;
+    display: block;
+    margin: auto;
+}
+
+.button:hover {
+    background: var(--blue);
+}
+
