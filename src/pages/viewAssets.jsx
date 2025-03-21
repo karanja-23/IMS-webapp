@@ -21,7 +21,7 @@ import {
   import { useTheme } from "@table-library/react-table-library/theme";
   import { getTheme } from "@table-library/react-table-library/baseline"
 function ViewAssets() {
-  const LIMIT = 3;
+  const LIMIT = 5;
 
   const { isOpen } = useContext(AppContext);
   const { username } = useParams();
