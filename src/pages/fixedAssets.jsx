@@ -622,7 +622,7 @@ function FixedAssets() {
       {editAsset ? (
         <div className="add_asset_modal">
           <ToastContainer />
-          <h3 style={{ opacity: "0.75" }}>Edit space</h3>
+          <h3 style={{ opacity: "0.75" }}>Edit Asset</h3>
           <CloseRoundedIcon
             onClick={() => {
                 setEditAsset(false)
