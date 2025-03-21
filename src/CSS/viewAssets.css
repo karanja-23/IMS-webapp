@@ -31,7 +31,7 @@
     border-radius: 0;
 }
 .profile-details span {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: var(--grey);    
     font-weight:600;
     opacity: 0.8;
@@ -40,7 +40,8 @@
 
 .profile-details strong {
     color: var(--orange);
-    opacity: 0.9;
+    opacity: 0.7;
+    font-size: 0.93rem;
 }
 .tables {
     width: 100%;
