@@ -68,7 +68,11 @@ function FixedAssets() {
   const [spaceId, setSpaceId] =useState('')
   const [vendorId, setVendorId] =useState('')
   const [categoryId,setCategoryId] =useState('')
-  
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showAssignUserModal, setShowAssignUserModal] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [userId, setUserId] = useState(null);
+
   const theme = useTheme(getTheme());
   const filteredData = assets?.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
@@ -134,7 +138,10 @@ function FixedAssets() {
       .then((data) => {
         localStorage.removeItem("assets");
         localStorage.setItem("assets", JSON.stringify(data));
-        setAssets(data);
+        const assetsInAlphabeticalOrder = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setAssets(assetsInAlphabeticalOrder);
       });
   }
   async function getCategories(){
@@ -176,7 +183,19 @@ function FixedAssets() {
             setVendors(data)
         });
   }
+  async function getUsers(){
+    fetch('https://mobileimsbackend.onrender.com/users',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }        
+    })
+    .then(response => response.json())
+    .then(data => {
+        setUsers(data)
+    })
 
+  }
   function addNewAsset(event) {
     event.preventDefault();
     if (name === "" || serialNumber  === "" || description === "" || cost==='' || categories === 0) {
@@ -359,6 +378,75 @@ function FixedAssets() {
         setActionRowId(null);
       });
   }
+  function showAssignAsset(id,status){
+    setCurrentAssetId(id)
+    if (status === "unassigned"){
+      setShowAssignModal(true)
+    }
+    else{
+      toast("Asset already assigned", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        className: "toast-message",
+        bodyClassName: "toast-message-body",
+      });
+    }
+  }
+  function handleAssignAsset(){
+    
+    fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({   
+        assign_id: Number(userId),
+        space_id: Number(spaceId),
+        status: "borrowed"
+      })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data["message"] === "Asset updated") {
+        toast("Asset assigned successfully", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          className: "toast-message",
+          bodyClassName: "toast-message-body",
+        });
+        getAssets()
+        setShowAssignUserModal(false)
+      }
+    })
+    .then(() => {
+      fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({   
+          assigned_to: Number(userId),
+          space_id: Number(spaceId),
+          status: "borrowed"
+        })
+
+      })
+      
+    })
+  }
+
   return (
     <>
       <div className="main" style={{ opacity: addasset ? 0.4 : 0.99 }}>
@@ -479,7 +567,7 @@ function FixedAssets() {
                           />
                           {actionRowId === item.id ? (
                             <div className="action-modal">
-                                <span onClick={() => showEditAsset(item.id)}>
+                                <span onClick={() => showAssignAsset(item.id,item.status)}>
                                 <AssignmentIndRoundedIcon 
                                   style={{ fontSize: "1.3em" }}
                                 />
@@ -720,6 +808,60 @@ function FixedAssets() {
           
         </div>
       ) : null}
+      {showAssignModal ? (
+        <>
+          <div className="assign_asset_modal">
+            <ToastContainer />
+            <h3 style={{ opacity: "0.75" }}>Assign Asset</h3>
+            <CloseRoundedIcon
+              onClick={() => {
+                setShowAssignModal(false);
+              }}
+              className="close-btn"
+            />
+            <button onClick={() =>{
+               setShowAssignModal(false)
+               setActionRowId(null)
+               getUsers()
+               setShowAssignUserModal(true)
+
+            }}>Assign asset to a user</button>
+            <button>Assign to space</button>
+            
+          </div>
+        </>
+      ) : null}
+      {showAssignUserModal ? (
+        <div className="assign_asset_modal">
+          <h4>Assign asset to:</h4>
+          <CloseRoundedIcon
+              onClick={() => {
+                setShowAssignUserModal(false);
+              }}
+              className="close-btn"
+            />
+          <label htmlFor="user">Select user</label>
+          <select value={userId} onChange={(event) => setUserId(event.target.value)}>
+            <option value={0}>Select user</option>
+            {users?.map((user, index) => (
+              <option value={user.id} key={index}>
+                {user.username}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="space">Select space</label>
+          <select value={spaceId} onChange={(event) => setSpaceId(event.target.value)}>
+            <option value={0}>Select space</option>
+            {spaces?.map((space, index) => (
+              <option value={space.id} key={index}>
+                {space.name}
+              </option>
+            ))}
+          </select>
+          <button onClick={() => handleAssignAsset()}>Assign</button>
+
+        </div>
+      ): null}
     </>
   );
 }

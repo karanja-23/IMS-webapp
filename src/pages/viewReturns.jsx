@@ -4,35 +4,37 @@ import { useParams, useLocation } from "react-router-dom";
 import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
-import image from "../assets/user.png";
+import image from "../assets/barcode.png";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
-import "../CSS/users.css";
+import "../CSS/viewAssets.css";
+import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import Notification from "../components/notification";
 import {
-  Table,
-  Header,
-  HeaderRow,
-  Body,
-  Row,
-  HeaderCell,
-  Cell,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import { getTheme } from "@table-library/react-table-library/baseline";
-function ViewUsers() {
+    Table,
+    Header,
+    HeaderRow,
+    Body,
+    Row,
+    HeaderCell,
+    Cell,
+  } from "@table-library/react-table-library/table";
+  import { useTheme } from "@table-library/react-table-library/theme";
+  import { getTheme } from "@table-library/react-table-library/baseline"
+function ViewReturns() {
   const LIMIT = 5;
+
   const { isOpen } = useContext(AppContext);
   const { username } = useParams();
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
   const location = useLocation();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentAsset, setCurrentAsset] = useState(null);
   const id = location.state?.id;
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
   const [actionRowId, setActionRowId] = useState(null);
-  const [userHistory, setUserHistory] = useState([]);
-  const filteredData = userHistory?.filter((item) =>
-    item.assigned_to["username"].toLowerCase().includes(search.toLowerCase())
+  const [assetHistory, setAssetHistory] = useState([])
+  const filteredData = assetHistory?.filter((item) =>
+    item.assigned_to['username'].toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData.length / LIMIT);
   const paginatedData = filteredData?.slice(
@@ -41,9 +43,8 @@ function ViewUsers() {
   );
 
   const theme = useTheme(getTheme());
-
   useEffect(() => {
-    fetch(`https://mobileimsbackend.onrender.com/users/${id}`, {
+    fetch(`https://mobileimsbackend.onrender.com/assets/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -52,16 +53,19 @@ function ViewUsers() {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
-          setCurrentUser(data);
-          const sortedHistory = data.history.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
+          setCurrentAsset(data);
+          const historyByDate = data.history.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB - dateA;
           })
-          setUserHistory(sortedHistory);
+          setAssetHistory(historyByDate)
           setLoading(false);
+          
         }
       });
   }, []);
-  
+
   function handleSearch(event) {
     setSearch(event.target.value);
     setCurrentPage(0);
@@ -87,7 +91,7 @@ function ViewUsers() {
           }}
         >
           <div className="title">
-            {loading ? null : <h3>Profile/{currentUser.username}</h3>}
+            {loading ? null : <h3>Asset / {currentAsset.name}</h3>}
           </div>
           <Notification />
         </div>
@@ -105,23 +109,30 @@ function ViewUsers() {
           <>
             <div className="profiles">
               <div className="profile-img">
-                <img style={{ maxWidth: "200px" }} src={image} alt="user" />
+                <img src={image} alt="user" />
               </div>
               <div className="profile-details">
-                <div>
+                <div style={{ width: "30%" }}>
                   <span>
-                    <strong>Username:</strong> {currentUser.username}
+                    <strong>Asset name:</strong> {currentAsset.name}
                   </span>
                   <span>
-                    <strong>Email:</strong> {currentUser.email}
+                    <strong>Serial number:</strong> {currentAsset.serial_number}
+                  </span>
+                  <span>
+                    <strong>Status:</strong> {currentAsset.status}
                   </span>
                 </div>
-                <div>
+                <div style={{ width: "60%" }}>
                   <span>
-                    <strong>Role:</strong> {currentUser.role.name}
+                    <strong>Category:</strong> {currentAsset.category["name"]}
                   </span>
                   <span>
-                    <strong>Contact:</strong> {currentUser.contact}
+                    <strong>Current Location:</strong>{" "}
+                    {currentAsset.space["name"]}
+                  </span>
+                  <span>
+                    <strong>Description:</strong> {currentAsset.description}
                   </span>
                 </div>
               </div>
@@ -165,9 +176,8 @@ function ViewUsers() {
                   <Header>
                     <HeaderRow>
                       <HeaderCell>Date</HeaderCell>
-                      <HeaderCell>Serial number</HeaderCell>
-                      <HeaderCell >Asset name</HeaderCell>
-                      <HeaderCell>Action</HeaderCell>
+                      <HeaderCell>Assigned to</HeaderCell>
+                      <HeaderCell>Status</HeaderCell>
                       
                     </HeaderRow>
                   </Header>
@@ -176,8 +186,7 @@ function ViewUsers() {
                     {tableList.map((item, index) => (
                       <Row key={index} item={item}>
                          <Cell>{item.date}</Cell>
-                        <Cell>{item.asset['serial_number']}</Cell> 
-                        <Cell>{item.asset['name']}</Cell>               
+                        <Cell>{item.assigned_to['username']}</Cell>                
                         <Cell>{item.status}</Cell>
                         
                       </Row>
@@ -211,4 +220,4 @@ function ViewUsers() {
     </div>
   );
 }
-export default ViewUsers;
+export default ViewReturns;

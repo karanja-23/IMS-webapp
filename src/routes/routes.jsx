@@ -11,7 +11,9 @@ import ViewUsers from "../pages/viewUsers"
 import AddVendor from "../pages/addvendor"
 import ViewVendor from "../pages/viewVendor"
 import EditVendors from "../pages/editVendor"
+import Returns from "../pages/returns"
 import ViewAssets from "../pages/viewAssets"
+import ViewReturns from "../pages/viewReturns"
 const routes = [
     {
         path: "/",
@@ -28,6 +30,14 @@ const routes = [
     {
         path: "/fixedAssets/:id",
         element: <ViewAssets />
+    },
+    {
+        path: "/returns",
+        element: <Returns />,
+    },
+    {
+        path: "/returns/:id",
+        element: <ViewReturns />
     }
     ,
     {

@@ -11,6 +11,7 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
+import AssignmentReturnRoundedIcon from '@mui/icons-material/AssignmentReturnRounded';
 import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
 import LocationCityRoundedIcon from '@mui/icons-material/LocationCityRounded';
 import WorkspacesRoundedIcon from '@mui/icons-material/WorkspacesRounded';
@@ -142,6 +143,12 @@ function  SidebarComponent() {
                     <NavLink style={{display: "flex",}} to="/requests" className="link">
                     < AssignmentIndRoundedIcon className="icon"/>
                     <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Requests</span>            
+                    </NavLink>
+                </div>
+                <div className="item" style={{justifyContent: isOpen ? 'flex-start' : 'center'}}  >
+                    <NavLink style={{display: "flex",}} to="/returns" className="link">
+                    < AssignmentReturnRoundedIcon className="icon"/>
+                    <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Returns</span>            
                     </NavLink>
                 </div>
                 
