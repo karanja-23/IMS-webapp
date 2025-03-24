@@ -9,7 +9,7 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import "../CSS/assets.css"
+import "../CSS/returns.css"
 import {
   Table,
   Header,
@@ -26,6 +26,7 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import Notification from "../components/notification";
 import { AssignmentTurnedInRounded } from "@mui/icons-material";
+import { c } from "@table-library/react-table-library/Feature-dc8674d3";
 function Returns() {
   const LIMIT = 5;
   const navigate = useNavigate();
@@ -43,11 +44,18 @@ function Returns() {
     setRoles,
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentAssetId, setCurrentAssetId] = useState(null);
+  const [returnAsset, setReturnAsset] = useState(false);
   const [addasset, setAddAsset] = useState(false);
   const [search, setSearch] = useState("");
   const [actionRowId, setActionRowId] = useState(null);
   const key = "Composed Table";
-  const [currentPage, setCurrentPage] = useState(0);  
+  const [currentAssetName, setCurrentAssetName] = useState("");
+  const [borrower, setBorrower] = useState("");
+  const [borrowerId, setBorrowerId] = useState("")
+  const [currentPage, setCurrentPage] = useState(0);
+  const [spaceId, setSpaceId] = useState(null);
+  const [spaces, setSpaces] = useState([]);
   const [assets, setAssets] = useState([]);
   const [showReturnModal, setShowReturnModal] = useState(false);
   const theme = useTheme(getTheme());
@@ -122,14 +130,107 @@ function Returns() {
         setAssets(assetsInAlphabeticalOrder);
       });
   }
+  async function getSpaces(){
+    fetch("https://mobileimsbackend.onrender.com/spaces/all", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+            setSpaces(data)
+        });
+  }
 
   function handleSearch(event) {
     setSearch(event.target.value);
     setCurrentPage(0);
   }
 
+function handleReturnModal(name, user, id){
+  getSpaces()
+  setCurrentAssetName(name)
+  setBorrower(user)
+  setBorrowerId(id)
+  setShowReturnModal(!showReturnModal)
+  
+}
+function handleReturn(id){
+  setShowReturnModal(false)
+  setActionRowId(null)
+  setReturnAsset(true)
+}
+function handleReturnAsset(){
+  if(spaceId !== '0'){
+    fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        assign_id: null,
+        status: 'unassigned',
+        space_id:spaceId
+      })
+    })
+    .then(response => response.json())
+    
+    .then((body) =>{
+      if (body['message'] === 'Asset updated'){
+        getAssets()
+        toast("Asset returned", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          className: "toast-message",
+          bodyClassName: "toast-message-body",
+        });
+        setReturnAsset(false)
+      }
+    })
+    .then(() => {
+      fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({   
+          assigned_to: borrowerId,
+          space_id: Number(spaceId),
+          status: "returned"
+        })
 
+      })
+      .then(response => response.json())
+      .then ((body) =>{
+        console.log(body)
+      })
+      
+    })
+  }
+  else{
+    toast("Please select a room", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      className: "toast-message",
+      bodyClassName: "toast-message-body",
+    });
+    
+  }
 
+}
   return (
     <>
       <div className="main" style={{ opacity: addasset ? 0.4 : 0.99 }}>
@@ -237,7 +338,10 @@ function Returns() {
                                 />
                                 view
                               </span>
-                              <span onClick={(() =>setShowReturnModal(true))}>
+                              <span onClick={(() => {
+                                handleReturnModal(item.name, item.assign['username'],item.assign['id'])
+                                setCurrentAssetId(item.id)
+                              })}>
                                 < AssignmentIndRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />
@@ -273,8 +377,38 @@ function Returns() {
           </div>
         </div>
         {showReturnModal && (
-          <div></div>
+          <div className="assign_asset_modal">
+              <h4>Return <span>{currentAssetName}</span> assigned to <span>{borrower}</span></h4> 
+              <button onClick={() => handleReturn(currentAssetId)}> Yes</button>
+              <button onClick={() => {
+                setShowReturnModal(false)
+                setActionRowId(null)
+              }}>No</button>
+         
+          </div>
         )}
+        {returnAsset ?  (
+          <div className="assign_asset_modal">
+            <CloseRoundedIcon
+              onClick={() => {
+                setReturnAsset(false);
+              }}
+              className="close-btn"
+            />
+               
+          <label htmlFor="space">Return to:</label>
+          <select  id="space" value={spaceId} onChange={(event) => setSpaceId(event.target.value)}>
+            <option value={0}>Select Space</option>
+            {spaces?.map((space, index) => (
+              <option value={space.id} key={index}>
+                {space.name}
+              </option>
+            ))}
+          </select>
+
+          <button onClick={() => handleReturnAsset()}>Return</button>
+          </div>
+        ) : null}
       </div>
       
     </>

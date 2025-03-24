@@ -21,7 +21,7 @@ import {
   import { useTheme } from "@table-library/react-table-library/theme";
   import { getTheme } from "@table-library/react-table-library/baseline"
 function ViewReturns() {
-  const LIMIT = 5;
+  const LIMIT = 4;
 
   const { isOpen } = useContext(AppContext);
   const { username } = useParams();
@@ -34,8 +34,10 @@ function ViewReturns() {
   const [actionRowId, setActionRowId] = useState(null);
   const [assetHistory, setAssetHistory] = useState([])
   const filteredData = assetHistory?.filter((item) =>
-    item.assigned_to['username'].toLowerCase().includes(search.toLowerCase())
-  );
+    item.assigned_to?.username
+      ? item.assigned_to.username.toLowerCase().includes(search.toLowerCase())
+      : true // ✅ Include entries where assigned_to is null
+  )
   const totalPages = Math.ceil(filteredData.length / LIMIT);
   const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
@@ -185,8 +187,8 @@ function ViewReturns() {
                   <Body>
                     {tableList.map((item, index) => (
                       <Row key={index} item={item}>
-                         <Cell>{item.date}</Cell>
-                        <Cell>{item.assigned_to['username']}</Cell>                
+                         <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
+                         <Cell>{item.assigned_to?.username || "Not assigned"}</Cell>
                         <Cell>{item.status}</Cell>
                         
                       </Row>
