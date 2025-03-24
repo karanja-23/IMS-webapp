@@ -175,7 +175,7 @@ function ViewUsers() {
                   <Body>
                     {tableList.map((item, index) => (
                       <Row key={index} item={item}>
-                         <Cell>{item.date}</Cell>
+                                                 <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
                         <Cell>{item.asset['serial_number']}</Cell> 
                         <Cell>{item.asset['name']}</Cell>               
                         <Cell>{item.status}</Cell>

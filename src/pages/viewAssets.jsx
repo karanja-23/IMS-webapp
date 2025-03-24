@@ -34,9 +34,11 @@ function ViewAssets() {
   const [actionRowId, setActionRowId] = useState(null);
   const [assetHistory, setAssetHistory] = useState([])
   const filteredData = assetHistory?.filter((item) =>
-    item.assigned_to['username'].toLowerCase().includes(search.toLowerCase())
-  );
-  const totalPages = Math.ceil(filteredData.length / LIMIT);
+    item.assigned_to?.username
+      ? item.assigned_to.username.toLowerCase().includes(search.toLowerCase())
+      : true // ✅ Include entries where assigned_to is null
+  )
+  const totalPages = Math.ceil(filteredData?.length || 0 / LIMIT);
   const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
     (currentPage + 1) * LIMIT
@@ -53,8 +55,12 @@ function ViewAssets() {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
-          setCurrentAsset(data);
-          setAssetHistory(data.history)
+          setCurrentAsset(data)
+          const sortedHistory = data.history.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+          })
+          setAssetHistory(sortedHistory)
+          console.log(data.history)
           setLoading(false);
           
         }
@@ -65,6 +71,7 @@ function ViewAssets() {
     setSearch(event.target.value);
     setCurrentPage(0);
   }
+  
   return (
     <div className="main">
       <SidebarComponent />
@@ -178,10 +185,12 @@ function ViewAssets() {
                   </Header>
 
                   <Body>
+                   
                     {tableList.map((item, index) => (
+                      
                       <Row key={index} item={item}>
-                         <Cell>{item.date}</Cell>
-                        <Cell>{item.assigned_to['username']}</Cell>                
+                        <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
+                         <Cell>{item.assigned_to?.username || "Not assigned"}</Cell>            
                         <Cell>{item.status}</Cell>
                         
                       </Row>
