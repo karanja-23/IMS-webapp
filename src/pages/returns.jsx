@@ -54,7 +54,7 @@ function Returns() {
   const filteredData = assets?.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
-  const totalPages = Math.ceil(filteredData.length / LIMIT);
+  const totalPages = Math.ceil(filteredData?.length / LIMIT);
   const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
     (currentPage + 1) * LIMIT

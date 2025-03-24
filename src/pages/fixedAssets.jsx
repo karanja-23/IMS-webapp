@@ -125,7 +125,7 @@ function FixedAssets() {
     }
   }, [loggedIn]);
   useEffect(() => {
-    Promise.all([getAssets(), getCategories(), getSpaces(), getVendors()]);
+    Promise.all([getAssets(), getCategories(), getSpaces(), getVendors(),getUsers()]);
   }, []);
   async function getAssets() {
     fetch("https://mobileimsbackend.onrender.com/assets", {
