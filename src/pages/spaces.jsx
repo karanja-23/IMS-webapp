@@ -373,7 +373,7 @@ function Spaces() {
                               )} />
                             {actionRowId === item.id ? (
                               <div className="action-modal">
-                                  <span onClick={(() => navigate(`/fixedAssets/${item.name}`,{state:{id:item.id}}))}>
+                                  <span onClick={(() => navigate(`/spaces/view/${item.name}`,{state:{id:item.id}}))}>
                                 <RemoveRedEyeRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />

@@ -40,8 +40,8 @@
 .profile-details span {
   display: flex;
   flex-direction: column; 
-  gap: 5pxsss;
-  font-size: 0.9rem;
+  gap: 5px;
+  font-size: 1.0rem;
   color: var(--blue);
   padding: 5px 10px;
   border-radius: 8px;
