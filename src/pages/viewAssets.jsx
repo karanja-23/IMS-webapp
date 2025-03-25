@@ -38,7 +38,7 @@ function ViewAssets() {
       ? item.assigned_to.username.toLowerCase().includes(search.toLowerCase())
       : true // ✅ Include entries where assigned_to is null
   )
-  const totalPages = Math.ceil(filteredData?.length || 0 / LIMIT);
+  const totalPages = Math.ceil(filteredData?.length  / LIMIT);
   const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
     (currentPage + 1) * LIMIT
@@ -60,7 +60,7 @@ function ViewAssets() {
             return new Date(b.date) - new Date(a.date);
           })
           setAssetHistory(sortedHistory)
-          console.log(data.history)
+          
           setLoading(false);
           
         }

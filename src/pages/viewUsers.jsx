@@ -136,7 +136,7 @@ function ViewUsers() {
               
             }}
           >
-            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>Asset history</h3>
+            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>User history</h3>
             <input
                 type="search"
                 placeholder="search ..."
