@@ -75,7 +75,7 @@ function FixedAssets() {
 
   const theme = useTheme(getTheme());
   const filteredData = assets?.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item?.name?.toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData.length / LIMIT);
   const paginatedData = filteredData?.slice(

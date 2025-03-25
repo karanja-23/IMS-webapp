@@ -14,6 +14,7 @@ import EditVendors from "../pages/editVendor"
 import Returns from "../pages/returns"
 import ViewAssets from "../pages/viewAssets"
 import ViewReturns from "../pages/viewReturns"
+import ViewSpace from "../pages/viewspace"
 const routes = [
     {
         path: "/",
@@ -64,6 +65,11 @@ const routes = [
         path: "/spaces",
         element: <Spaces />,
     },
+    {
+        path: "/spaces/view/:id",
+        element: <ViewSpace />
+    }
+    ,
     {
         path: "/team",
         element: <Team />,
