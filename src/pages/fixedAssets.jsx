@@ -136,12 +136,13 @@ function FixedAssets() {
     })
       .then((response) => response.json())
       .then((data) => {
-        localStorage.removeItem("assets");
-        localStorage.setItem("assets", JSON.stringify(data));
+        
         const assetsInAlphabeticalOrder = data.sort((a, b) =>
-          a.name.localeCompare(b.name)
+          a.serial_number.localeCompare(b.serial_number)
         );
         setAssets(assetsInAlphabeticalOrder);
+        localStorage.removeItem("assets");
+        localStorage.setItem("assets", JSON.stringify(assetsInAlphabeticalOrder));
       });
   }
   async function getCategories(){

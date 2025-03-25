@@ -4,6 +4,7 @@ import { AppContext } from "../context/context";
 import WorkspacesRoundedIcon from '@mui/icons-material/WorkspacesRounded'
 import CircleNotificationsRoundedIcon from '@mui/icons-material/CircleNotificationsRounded';
 import { use } from "react";
+import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import { useNavigate } from "react-router-dom";
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import ControlPointRoundedIcon from '@mui/icons-material/ControlPointRounded';
@@ -372,6 +373,12 @@ function Spaces() {
                               )} />
                             {actionRowId === item.id ? (
                               <div className="action-modal">
+                                  <span onClick={(() => navigate(`/fixedAssets/${item.name}`,{state:{id:item.id}}))}>
+                                <RemoveRedEyeRoundedIcon
+                                  style={{ fontSize: "1.3em" }}
+                                />
+                                view
+                              </span>
                                   <span onClick={() => showEditSpace(item.id)} >
                                     <EditRoundedIcon  style={{fontSize: "1.3em"}} />
                                     edit space
