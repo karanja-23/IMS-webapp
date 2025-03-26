@@ -1,7 +1,7 @@
 import { CircularProgress } from "@mui/material";
 function Loading() {    
     return (
-        <div style={{position: "absolute", top: 0, display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", width: "100%", backgroundColor: "transparent"}}>
+        <div style={{position: "absolute", top: 0, display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", width: "100%", backgroundColor: "transparent", zIndex: "2"}}>
           <CircularProgress color="#FC4F11" />
         </div>
       );

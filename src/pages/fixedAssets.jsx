@@ -55,6 +55,7 @@ function FixedAssets() {
   const [roleId, setRoleId] = useState("");
   const [newRoleId, setNewRoleId] = useState("");
   const [editAsset, setEditAsset] = useState(false);
+  const [condition,setCondition] =useState("")
   const [newStatus, setNewStatus] = useState("");
   const [search, setSearch] = useState("");
   const [actionRowId, setActionRowId] = useState(null);
@@ -294,6 +295,7 @@ function FixedAssets() {
             setSpaceId(data.space.id)
             setVendorId(data.vendor.id)
             setCategoryId(data.category.id)
+            setCondition(data.condition)
             
         }
       })
@@ -310,6 +312,7 @@ function FixedAssets() {
         purchase_date:date,
         purchase_cost:cost,
         description:description,
+        condition:condition,
         serial_number: serialNumber,
         space_id:Number(spaceId),
         vendor_id:Number(vendorId),
@@ -738,6 +741,14 @@ function FixedAssets() {
 
                 ))}
             </select>
+            <label htmlFor="condition">Asset Condition</label>
+            <input
+              id="condition"
+              onChange={(event) => setCondition(event.target.value)}
+              value={condition}
+              type="text"
+              placeholder="enter asset name"
+            />
             <label htmlFor="serial">Serial number</label>
             <input
               id="serial"

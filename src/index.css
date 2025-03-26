@@ -75,7 +75,7 @@
   border-bottom: 1px solid #e0e0e0;
 }
 .action-modal span:hover {
-  background: var(--darkerShade);
+  background: var(--blue);
   color: var(--white);
 }
 
@@ -113,9 +113,19 @@
 }
 .back-button {
     padding-top: 70px;
+    z-index: 100;
     
 }
 textarea:focus{
   outline-color: var(--orange);
   opacity: 0.5;
+}
+.action{
+  font-weight: 500;
+  color: var(--orange);
+}
+
+.action1{
+  color: var(--blue);
+  font-weight: 500;
 }
