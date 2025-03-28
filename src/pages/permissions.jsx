@@ -49,7 +49,7 @@ function Permissions() {
   const [currentPage, setCurrentPage] = useState(0);
   const [roleName, setRoleName] = useState("");
   const theme = useTheme(getTheme());
-  const filteredData = roles.filter((item) =>
+  const filteredData = (roles || []).filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData.length / LIMIT);

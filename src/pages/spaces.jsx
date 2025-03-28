@@ -49,7 +49,7 @@ function Spaces() {
     const [currentSpaceId, setCurrentSpaceId] = useState(null)
     const [spaces,setSpaces] = useState([])
     const theme = useTheme(getTheme())
-    const filteredData = spaces.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+    const filteredData = (spaces || []).filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     const totalPages = Math.ceil(filteredData.length / LIMIT);
     const paginatedData = filteredData.slice(currentPage * LIMIT, (currentPage + 1) * LIMIT);
     
