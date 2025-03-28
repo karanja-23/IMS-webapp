@@ -734,7 +734,7 @@ function FixedAssets() {
               type="text"
               placeholder="enter asset name"
             />
-            <label htmlFor="category">Category</label>
+            <label htmlFor="category">Current category</label>
             <select value={categoryId} id="category" onChange={(event)=>setCategoryId(event.target.value)} >
                 <option value={0}>Select asset category</option>
                 {categories?.map((category, index) => (
@@ -785,7 +785,7 @@ function FixedAssets() {
                 )) }
             </select>
 
-            <label htmlFor="vendors">Select Vendor</label>
+            <label htmlFor="vendors">Select asset Vendor</label>
             <select value={vendorId} id="vendors" onChange={(event) => setVendorId(event.target.value)}>
                 <option value={0}>Select vendor</option>
                 {vendors?.map((vendor,index) =>(

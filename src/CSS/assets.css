@@ -79,7 +79,7 @@
 }
 .add_asset_modal select{
     width: 70%;
-    padding: 7px;
+    padding: 5px 7px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;

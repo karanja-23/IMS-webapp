@@ -30,7 +30,7 @@ import Notification from "../components/notification";
 function Requests() {
     const LIMIT = 5
     const navigate = useNavigate();
-    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam, roles, setRoles,requests, setRequests} =useContext(AppContext);
+    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team,spaces, setSpaces, setTeam, roles, setRoles,requests, setRequests} =useContext(AppContext);
     const [isLoading, setIsLoading] = useState(true);
     const [addSpace, setAddSpace] = useState(false)
     const [assignModal, setAssignModal] = useState(false)
@@ -40,7 +40,6 @@ function Requests() {
     const [borrowerId, setBorrowerId] = useState("")
     const [requestId, setRequestId] = useState("")
     const [search, setSearch] = useState("")
-    const [spaces, setSpaces] =useState([])
     const [spaceId, setSpaceId] = useState("")
     
     const [actionRowId, setActionRowId] =useState(null)
@@ -56,8 +55,11 @@ function Requests() {
 
 
     useEffect(() => {
-      if (loggedIn) {        
-        setRequests(JSON.parse(localStorage.getItem("requests")))
+      if (loggedIn) {
+        const sortedRequests = JSON.parse(localStorage.getItem("requests")).sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        })        
+        setRequests(sortedRequests)
         navigate("/requests");
       }   
       else {
@@ -100,10 +102,13 @@ function Requests() {
       
     }, [loggedIn]);
     useEffect(() => {
+      if (spaces.length === 0){
         getSpaces()
-                
-        getRequests()
 
+      }
+      if (requests.length === 0){
+        getRequests()
+      }
     },[])
     async function getSpaces(){
         fetch("https://mobileimsbackend.onrender.com/spaces/all", {
@@ -129,8 +134,11 @@ function Requests() {
             
             localStorage.removeItem("requests")
             localStorage.setItem("requests", JSON.stringify(data));
-            setRequests(data)
-            
+            const sortedRequests = data.sort((a, b) => {
+              return new Date(b.date) - new Date(a.date);
+            })        
+            setRequests(sortedRequests)
+                        
         })
     }
     
