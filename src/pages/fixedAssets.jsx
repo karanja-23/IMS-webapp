@@ -40,6 +40,8 @@ function FixedAssets() {
     setTeam,
     roles,
     setRoles,
+    assets,
+    setAssets
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const [addasset, setAddAsset] = useState(false);
@@ -65,7 +67,6 @@ function FixedAssets() {
   const [spaces, setSpaces] = useState([]);
   const [vendors, setVendors] = useState([])
   const [categories, setCategories] = useState([])
-  const [assets, setAssets] = useState([]);
   const [spaceId, setSpaceId] =useState('')
   const [vendorId, setVendorId] =useState('')
   const [categoryId,setCategoryId] =useState('')
@@ -85,10 +86,9 @@ function FixedAssets() {
   );
 
   useEffect(() => {
-    if (loggedIn) {
-      setAssets(JSON.parse(localStorage.getItem("assets")));
-      setCategories(JSON.parse(localStorage.getItem("categories")));
-      navigate("/fixedAssets");
+    if (loggedIn) { 
+      setAssets(JSON.parse(localStorage.getItem("assets")));    
+      
     } else {
       const token = localStorage.getItem("token");
 
@@ -125,9 +125,7 @@ function FixedAssets() {
       }
     }
   }, [loggedIn]);
-  useEffect(() => {
-    Promise.all([getAssets(), getCategories(), getSpaces(), getVendors(),getUsers()]);
-  }, []);
+ 
   async function getAssets() {
     fetch("https://mobileimsbackend.onrender.com/assets", {
       method: "GET",
