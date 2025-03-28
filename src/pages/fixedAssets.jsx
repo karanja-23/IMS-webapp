@@ -41,7 +41,13 @@ function FixedAssets() {
     roles,
     setRoles,
     assets,
-    setAssets
+    setAssets,
+    categories,
+    setCategories,
+    vendors, 
+    setVendors,
+    spaces,
+    setSpaces
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const [addasset, setAddAsset] = useState(false);
@@ -64,9 +70,6 @@ function FixedAssets() {
   const key = "Composed Table";
   const [currentPage, setCurrentPage] = useState(0);
   const [currentAssetId, setCurrentAssetId] = useState(null);
-  const [spaces, setSpaces] = useState([]);
-  const [vendors, setVendors] = useState([])
-  const [categories, setCategories] = useState([])
   const [spaceId, setSpaceId] =useState('')
   const [vendorId, setVendorId] =useState('')
   const [categoryId,setCategoryId] =useState('')

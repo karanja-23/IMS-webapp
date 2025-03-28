@@ -11,12 +11,16 @@ const AppProvider = ({ children }) => {
     const [roles, setRoles] = useState([])
     const [assets, setAssets] = useState([])
     const [vendors, setVendors] = useState([])
+    const [categories, setCategories] =useState([])
+    const [spaces, setSpaces] = useState([])
+    const [requests,setRequests] = useState([])
+    const [returns, setReturns] =useState([])
 
     const toggle = () => {
         setIsOpen(!isOpen);
     }
     return (
-        <AppContext.Provider value={{ loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken, isOpen,setIsOpen, toggle, team, setTeam, roles, setRoles, assets, setAssets, vendors,setVendors}}>
+        <AppContext.Provider value={{ loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken, isOpen,setIsOpen, toggle, team, setTeam, roles, setRoles, assets, setAssets, vendors,setVendors,categories, setCategories, spaces, setSpaces, requests, setRequests, returns,setReturns}}>
             {children}
         </AppContext.Provider>
     );

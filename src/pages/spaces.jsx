@@ -28,7 +28,7 @@ import Notification from "../components/notification";
 function Spaces() {
     const LIMIT = 5
     const navigate = useNavigate();
-    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam, roles, setRoles} =useContext(AppContext);
+    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam, roles, setRoles,spaces, setSpaces} =useContext(AppContext);
     const [isLoading, setIsLoading] = useState(true);
     const [addSpace, setAddSpace] = useState(false)
     const [name, setName] = useState('')
@@ -47,7 +47,6 @@ function Spaces() {
     const key = 'Composed Table'
     const [currentPage, setCurrentPage] = useState(0)
     const [currentSpaceId, setCurrentSpaceId] = useState(null)
-    const [spaces,setSpaces] = useState([])
     const theme = useTheme(getTheme())
     const filteredData = (spaces || []).filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     const totalPages = Math.ceil(filteredData.length / LIMIT);

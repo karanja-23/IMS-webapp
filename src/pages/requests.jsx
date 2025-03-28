@@ -30,7 +30,7 @@ import Notification from "../components/notification";
 function Requests() {
     const LIMIT = 5
     const navigate = useNavigate();
-    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam, roles, setRoles} =useContext(AppContext);
+    const {loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken,isOpen,team, setTeam, roles, setRoles,requests, setRequests} =useContext(AppContext);
     const [isLoading, setIsLoading] = useState(true);
     const [addSpace, setAddSpace] = useState(false)
     const [assignModal, setAssignModal] = useState(false)
@@ -42,7 +42,7 @@ function Requests() {
     const [search, setSearch] = useState("")
     const [spaces, setSpaces] =useState([])
     const [spaceId, setSpaceId] = useState("")
-    const [requests,setRequests] = useState([])
+    
     const [actionRowId, setActionRowId] =useState(null)
     const key = 'Composed Table'
     const [currentPage, setCurrentPage] = useState(0)
@@ -56,8 +56,7 @@ function Requests() {
 
 
     useEffect(() => {
-      if (loggedIn) {
-        
+      if (loggedIn) {        
         setRequests(JSON.parse(localStorage.getItem("requests")))
         navigate("/requests");
       }   

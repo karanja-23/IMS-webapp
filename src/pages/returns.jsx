@@ -42,6 +42,8 @@ function Returns() {
     setTeam,
     roles,
     setRoles,
+    returns,
+    setReturns
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentAssetId, setCurrentAssetId] = useState(null);
@@ -56,10 +58,10 @@ function Returns() {
   const [currentPage, setCurrentPage] = useState(0);
   const [spaceId, setSpaceId] = useState(null);
   const [spaces, setSpaces] = useState([]);
-  const [assets, setAssets] = useState([]);
+  
   const [showReturnModal, setShowReturnModal] = useState(false);
   const theme = useTheme(getTheme());
-  const filteredData = (assets || []).filter((item) =>
+  const filteredData = (returns || []).filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData?.length / LIMIT);
@@ -70,7 +72,7 @@ function Returns() {
 
   useEffect(() => {
     if (loggedIn) {
-      setAssets(JSON.parse(localStorage.getItem("unassingnedassets")));
+      setReturns(JSON.parse(localStorage.getItem("unassingnedassets")));
      
       navigate("/returns");
     } else {
@@ -127,7 +129,7 @@ function Returns() {
         const assetsInAlphabeticalOrder = assignedAssets.sort((a, b) =>
           a.name.localeCompare(b.name)
         );
-        setAssets(assetsInAlphabeticalOrder);
+        setReturns(assetsInAlphabeticalOrder);
       });
   }
   async function getSpaces(){
