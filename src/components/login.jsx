@@ -90,13 +90,15 @@ function Login() {
         setWelcome(true);
 
         await fetchData(data.access_token);
-
-        setTimeout(() => {
-          setIsLoading(false);
-          setLoggedIn(true);
-          setWelcome(false)       
+        setIsLoading(false);
+        setLoggedIn(true);
+        setTimeout(() => {          
           navigate("/");
         }, 1000);
+        
+        setTimeout(() => {
+          setWelcome(false);
+        }, 1500);
       }
     } catch (error) {
       toast("Login failed", { theme: "dark" });
@@ -119,9 +121,28 @@ function Login() {
           <input id="email" type="email" placeholder="johndoe@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           <label htmlFor="password">Password</label>
           <input id="password" type="password" placeholder="johndoe@123" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <div className="checkbox-container">
-            <input type="checkbox" id="remember" checked={checked} onChange={() => setChecked(!checked)} />
-            <label htmlFor="remember">Remember me</label>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "left",
+              paddingLeft: "17%",
+            }}
+          >
+            <input
+              style={{ marginRight: "10px", width: "15px", height: "15px" }}
+              onChange={(event) => setChecked(event.target.checked)}
+              checked={checked}
+              type="checkbox"
+              id="remember"
+              name="remember"
+            />
+            <label
+              style={{ marginLeft: "5px", fontSize: "14px", fontWeight: "500" }}
+              htmlFor="remember"
+            >
+              Remember me
+            </label>
           </div>
           <button type="submit">
             {isLoading ? <FontAwesomeIcon icon={faSpinner} spin size="lg" color="#fff" /> : "Login"}
