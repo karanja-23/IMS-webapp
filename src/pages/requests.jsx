@@ -49,7 +49,7 @@ function Requests() {
 
     
     const theme = useTheme(getTheme())
-    const filteredData = requests.filter((item) => item.asset.name.toLowerCase().includes(search.toLowerCase()));
+    const filteredData = requests?.filter((item) => item.asset.name.toLowerCase().includes(search.toLowerCase()));
     const totalPages = Math.ceil(filteredData.length / LIMIT);
     const paginatedData = filteredData.slice(currentPage * LIMIT, (currentPage + 1) * LIMIT);
     
