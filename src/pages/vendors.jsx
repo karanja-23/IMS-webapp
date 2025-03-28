@@ -41,13 +41,14 @@ function Vendors() {
     setTeam,
     roles,
     setRoles,
+    vendors,
+    setVendors
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true); 
   const [search, setSearch] = useState("");
   const [actionRowId, setActionRowId] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentUserId, setCurrentUserId] = useState(null);
-  const [vendors, setVendors] = useState([]);
   const theme = useTheme(getTheme());
   const filteredData = vendors?.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
