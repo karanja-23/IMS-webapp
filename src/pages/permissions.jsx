@@ -39,6 +39,8 @@ function Permissions() {
     setTeam,
     roles,
     setRoles,
+    permissions,
+    setPermissions
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const [addUser, setAddUser] = useState(false);
@@ -57,7 +59,7 @@ function Permissions() {
     currentPage * LIMIT,
     (currentPage + 1) * LIMIT
   );
-  const [permissions, setPermissions] = useState([]);
+  
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [permissionInputs, setPermissionInputs] = useState([]);
   const [editPermission, setEditPermission] = useState(false);
