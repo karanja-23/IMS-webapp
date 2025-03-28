@@ -23,13 +23,20 @@ function Login() {
     setRoles,
     setAssets,
     setVendors,
+    setCategories,
+    setSpaces,
+    setRequests,
+    setReturns
   } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   async function fetchData(token) {
     try {
-      const [rolesRes, vendorsRes, assetsRes, usersRes] = await Promise.all([
+      const [ requestsRes,spacesRes,categoriesRes,rolesRes, vendorsRes, assetsRes, usersRes] = await Promise.all([
+        fetch('https://mobileimsbackend.onrender.com/requests').then((res) => res.json()),
+        fetch("https://mobileimsbackend.onrender.com/spaces/all").then((res) => res.json()),
+        fetch("https://mobileimsbackend.onrender.com/categories").then((res) => res.json()),
         fetch("https://mobileimsbackend.onrender.com/roles/all").then((res) => res.json()),
         fetch("https://mobileimsbackend.onrender.com/vendors").then((res) => res.json()),
         fetch("https://mobileimsbackend.onrender.com/assets").then((res) => res.json()),
@@ -38,12 +45,22 @@ function Login() {
           headers: { "Authorization": `Bearer ${token}` },
         }).then((res) => res.json()),
       ]);
-      
+      setRequests(requestsRes)
+      setSpaces(spacesRes)
+      setCategories(categoriesRes)
       setRoles(rolesRes);
       setVendors(vendorsRes);
       setAssets(assetsRes.sort((a, b) => a.serial_number.localeCompare(b.serial_number)));
       setTeam(usersRes);
       
+      const assignedAssets = assetsRes.filter(asset => asset.status !== "unassigned")
+      setReturns(assignedAssets)
+
+      
+      localStorage.setItem("unassingnedassets", JSON.stringify(assignedAssets));
+      localStorage.setItem("requests", JSON.stringify(requestsRes));
+      localStorage.setItem("spaces", JSON.stringify(spacesRes));
+      localStorage.setItem("categories", JSON.stringify(categoriesRes));
       localStorage.setItem("roles", JSON.stringify(rolesRes));
       localStorage.setItem("vendors", JSON.stringify(vendorsRes));
       localStorage.setItem("assets", JSON.stringify(assetsRes));
