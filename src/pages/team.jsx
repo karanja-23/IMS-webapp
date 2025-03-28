@@ -61,7 +61,7 @@ function Team() {
   const [currentPage, setCurrentPage] = useState(0);
   const [currentUserId, setCurrentUserId] = useState(null);
   const theme = useTheme(getTheme());
-  const filteredData = team?.filter((item) =>
+  const filteredData = (team || []).filter((item) =>
     item.username.toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData?.length / LIMIT);
