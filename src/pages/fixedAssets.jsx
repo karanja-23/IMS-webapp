@@ -128,6 +128,14 @@ function FixedAssets() {
       }
     }
   }, [loggedIn]);
+  useEffect(() =>{
+    if (categories.length === 0 || spaces.length === 0 || vendors.length ===0){
+      getCategories()
+      getSpaces()
+      getVendors()
+    }
+    
+  },[])
  
   async function getAssets() {
     fetch("https://mobileimsbackend.onrender.com/assets", {
@@ -331,7 +339,7 @@ function FixedAssets() {
       .then((response) => response.json())
       .then((data) => {
         if (data["message"] === 'Asset updated') {
-          toast("User updated successfully", {
+          toast("Asset updated successfully", {
             position: "top-center",
             autoClose: 3000,
             hideProgressBar: true,
@@ -385,6 +393,7 @@ function FixedAssets() {
   }
   function showAssignAsset(id,status){
     setCurrentAssetId(id)
+    setActionRowId(null)
     if (status === "unassigned"){
       setShowAssignModal(true)
     }

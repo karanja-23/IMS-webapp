@@ -65,7 +65,28 @@ function Permissions() {
   const [editPermission, setEditPermission] = useState(false);
   useEffect(() => {
     if (loggedIn) {
-      getPermissions();
+      const storedPermissions = localStorage.getItem("permissions");
+      const storedRoles = localStorage.getItem("roles");
+      if (storedPermissions) {
+        const permissionsInAlphabeticalOrder = JSON.parse(localStorage.getItem("permissions")).sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        
+        setPermissions(permissionsInAlphabeticalOrder)
+      } else {
+        getPermissions();
+      }
+      if (storedRoles){
+        const RolesInAlphabeticalOrder = JSON.parse(localStorage.getItem("roles")).sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        
+        setRoles(RolesInAlphabeticalOrder)
+      }
+      else{
+        getRoles()
+      }
+      
       navigate("/permissions");
     } else {
       const token = localStorage.getItem("token");
@@ -104,15 +125,11 @@ function Permissions() {
     }
   }, [loggedIn]);
   useEffect(() => {
-    if (roles.length > 0) {
-      return;
+    if (permissions.length===0 ||roles.length ===0){
+      getPermissions();
+      getRoles();
     }
-    const myRoles = localStorage.getItem("roles");
-    if (myRoles) {
-      setRoles(JSON.parse(myRoles));
-    }
-    getPermissions();
-    getRoles();
+    
   },[])
   async function getPermissions() {
     fetch("https://mobileimsbackend.onrender.com/permissions/all", {
@@ -120,7 +137,14 @@ function Permissions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setPermissions(data);
+        localStorage.removeItem("permissions");
+        localStorage.setItem("permissions", JSON.stringify(data));
+        const permissionsInAlphabeticalOrder = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        
+        setPermissions(permissionsInAlphabeticalOrder)
+        
       });
   }
   async function getRoles() {
@@ -129,8 +153,12 @@ function Permissions() {
     })
       .then((response) => response.json())
       .then((data) => {
+        const RolesInAlphabeticalOrder = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
         
-        setRoles(data); 
+        setRoles(RolesInAlphabeticalOrder)
+        
         localStorage.removeItem("roles");
         localStorage.setItem("roles", JSON.stringify(data));      
       })
@@ -319,7 +347,7 @@ function Permissions() {
                        value={search}
                        onChange={handleSearch}
                        style={{
-                         width: '25%',
+                         width: '40%',
                          padding: '7px 12px',
                          opacity: '0.9',
                          outline: 'none',
