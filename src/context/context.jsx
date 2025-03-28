@@ -15,12 +15,13 @@ const AppProvider = ({ children }) => {
     const [spaces, setSpaces] = useState([])
     const [requests,setRequests] = useState([])
     const [returns, setReturns] =useState([])
+    const [permissions, setPermissions] = useState([]);
 
     const toggle = () => {
         setIsOpen(!isOpen);
     }
     return (
-        <AppContext.Provider value={{ loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken, isOpen,setIsOpen, toggle, team, setTeam, roles, setRoles, assets, setAssets, vendors,setVendors,categories, setCategories, spaces, setSpaces, requests, setRequests, returns,setReturns}}>
+        <AppContext.Provider value={{ loggedIn, setLoggedIn ,user,setUser,accessToken,setAccessToken, isOpen,setIsOpen, toggle, team, setTeam, roles, setRoles, assets, setAssets, vendors,setVendors,categories, setCategories, spaces, setSpaces, requests, setRequests, returns,setReturns,permissions,setPermissions}}>
             {children}
         </AppContext.Provider>
     );
