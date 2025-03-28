@@ -78,7 +78,18 @@ function Login() {
     setIsLoading(true);
 
     if (!email || !password) {
-      toast("Please enter your email and password", { theme: "dark" });
+      toast("Please enter your email and password", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        className: "toast-message",
+        bodyClassName: "toast-message-body",
+      });
       setIsLoading(false);
       return;
     }
@@ -92,7 +103,18 @@ function Login() {
       const data = await response.json();
       
       if (data.error) {
-        toast(data.error, { theme: "dark" });
+        toast(data.error, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          className: "toast-message",
+          bodyClassName: "toast-message-body",
+        });
         setIsLoading(false);
         return;
       }

@@ -72,7 +72,10 @@ function Returns() {
 
   useEffect(() => {
     if (loggedIn) {
-      setReturns(JSON.parse(localStorage.getItem("unassingnedassets")));
+      const assetsInAlphabeticalOrder = JSON.parse(localStorage.getItem("unassingnedassets")).sort((a, b) =>
+        a.serial_number.localeCompare(b.serial_number)
+      );
+      setReturns(assetsInAlphabeticalOrder);
      
       navigate("/returns");
     } else {
@@ -127,7 +130,7 @@ function Returns() {
         localStorage.removeItem("unassingnedassets");
         localStorage.setItem("unassingnedassets", JSON.stringify(assignedAssets));
         const assetsInAlphabeticalOrder = assignedAssets.sort((a, b) =>
-          a.name.localeCompare(b.name)
+          a.serial_number.localeCompare(b.serial_number)
         );
         setReturns(assetsInAlphabeticalOrder);
       });

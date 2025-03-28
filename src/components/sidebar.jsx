@@ -53,8 +53,15 @@ function  SidebarComponent() {
                   closeToast();
                   localStorage.removeItem("token")
                   localStorage.removeItem("team")
-                  setTeam([])
-                  setUser({})
+                  localStorage.removeItem("permissions")
+                  localStorage.removeItem("unassingnedassets")
+                  localStorage.removeItem("requests")
+                  localStorage.removeItem("spaces")
+                  localStorage.removeItem("categories");
+                  localStorage.removeItem("roles");
+                  localStorage.removeItem("vendors");
+                  localStorage.removeItem("assets");
+                  
                   setLoggedIn(false)
                   setAccessToken("")
                   navigate("/login")

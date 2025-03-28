@@ -72,10 +72,14 @@ function Team() {
 
   useEffect(() => {
     if (loggedIn) {
+      
       const storedTeam = localStorage.getItem("team");
       if (storedTeam) {
-        setTeam(JSON.parse(storedTeam));
-        navigate("/team");
+        const UsersInAlphabeticalOrder = JSON.parse(localStorage.getItem("team")).sort((a, b) =>
+          a.username.localeCompare(b.username)
+        );
+        
+        setTeam(UsersInAlphabeticalOrder)
       } else {
         fetch("https://mobileimsbackend.onrender.com/users", {
           method: "GET",
@@ -131,7 +135,12 @@ function Team() {
             const storedTeam = localStorage.getItem("team");
 
             if (storedTeam) {
-              setTeam(JSON.parse(storedTeam));
+              const UsersInAlphabeticalOrder = JSON.parse(localStorage.getItem("team")).sort((a, b) =>
+                a.username.localeCompare(b.username)
+              );
+              
+              setTeam(UsersInAlphabeticalOrder)
+              
             } else {
               fetch("https://mobileimsbackend.onrender.com/users", {
                 method: "GET",
@@ -143,7 +152,12 @@ function Team() {
                 .then((response) => response.json())
                 .then((data) => {
                   if (data) {
-                    setTeam(data);
+                    const UsersInAlphabeticalOrder = data.sort((a, b) =>
+                      a.username.localeCompare(b.username)
+                    );
+                    
+                    setTeam(UsersInAlphabeticalOrder)
+                    
                     localStorage.removeItem("team");
                     localStorage.setItem("team", JSON.stringify(data));
                   }
@@ -155,7 +169,29 @@ function Team() {
       }
     }
   }, [loggedIn]);
+  useEffect(() =>{
+    getUsers()
+  },[])
 
+  async function getUsers(){
+    fetch('https://mobileimsbackend.onrender.com/users',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }        
+    })
+    .then(response => response.json())
+    .then(data => {
+        localStorage.removeItem("team");
+        localStorage.setItem("team", JSON.stringify(data));
+        const UsersInAlphabeticalOrder = data.sort((a, b) =>
+          a.username.localeCompare(b.username)
+        );
+        
+        setTeam(UsersInAlphabeticalOrder)
+    })
+
+  }
 
   async function getRoles() {
     fetch("https://mobileimsbackend.onrender.com/roles/all", {
