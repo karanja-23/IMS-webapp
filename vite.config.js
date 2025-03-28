@@ -9,6 +9,9 @@ export default defineConfig({
     port: 8000,
     cors: true,
     allowedHosts: ['ims-zijf.onrender.com']
-    },
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+  }
 
 })
