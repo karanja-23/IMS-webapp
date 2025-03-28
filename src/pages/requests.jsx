@@ -314,7 +314,7 @@ function Requests() {
                           <Cell>{item.asset['serial_number']}</Cell>
                           <Cell>{item.asset['name']}</Cell>
                           <Cell>{item.user['username']}</Cell>
-                          <Cell>{item.status}</Cell>
+                          <Cell><span className={`status ${item.status.toLowerCase() || "unknown"}`}>{item.status}</span></Cell>
                           <Cell>
                             <MoreVertRoundedIcon onClick={((event) => {
                               event.stopPropagation()
