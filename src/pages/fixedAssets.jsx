@@ -129,6 +129,7 @@ function FixedAssets() {
     }
   }, [loggedIn]);
   useEffect(() =>{
+    getAssets()
     if (categories.length === 0 || spaces.length === 0 || vendors.length ===0){
       getCategories()
       getSpaces()
