@@ -15,6 +15,7 @@ import Returns from "../pages/returns"
 import ViewAssets from "../pages/viewAssets"
 import ViewReturns from "../pages/viewReturns"
 import ViewSpace from "../pages/viewspace"
+import Inventory from "../pages/inventory"
 const routes = [
     {
         path: "/",
@@ -24,6 +25,11 @@ const routes = [
         path: "/login",
         element: <Login />,
     },
+    {
+        path: "/inventory",
+        element: <Inventory />
+    }
+    ,
     {
         path: "/fixedAssets",
         element: <FixedAssets />,

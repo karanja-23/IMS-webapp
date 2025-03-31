@@ -27,14 +27,16 @@ function Login() {
     setSpaces,
     setRequests,
     setReturns,
-    setPermissions
+    setPermissions,
+    setInventories
   } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   async function fetchData(token) {
     try {
-      const [ permissionsRes ,requestsRes,spacesRes,categoriesRes,rolesRes, vendorsRes, assetsRes, usersRes] = await Promise.all([
+      const [  inventoriesRes,permissionsRes ,requestsRes,spacesRes,categoriesRes,rolesRes, vendorsRes, assetsRes, usersRes] = await Promise.all([
+        fetch("https://mobileimsbackend.onrender.com/inventory").then((res) => res.json()),
         fetch("https://mobileimsbackend.onrender.com/permissions/all").then((res) => res.json()),
         fetch('https://mobileimsbackend.onrender.com/requests').then((res) => res.json()),
         fetch("https://mobileimsbackend.onrender.com/spaces/all").then((res) => res.json()),
@@ -47,6 +49,7 @@ function Login() {
           headers: { "Authorization": `Bearer ${token}` },
         }).then((res) => res.json()),
       ]);
+      setInventories(inventoriesRes)
       setPermissions(permissionsRes)
       setRequests(requestsRes)
       setSpaces(spacesRes)
@@ -60,6 +63,7 @@ function Login() {
       setReturns(assignedAssets)
 
       localStorage.setItem("permissions", JSON.stringify(permissionsRes));
+      localStorage.setItem("inventories", JSON.stringify(inventoriesRes));
       localStorage.setItem("unassingnedassets", JSON.stringify(assignedAssets));
       localStorage.setItem("requests", JSON.stringify(requestsRes));
       localStorage.setItem("spaces", JSON.stringify(spacesRes));

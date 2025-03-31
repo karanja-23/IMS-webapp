@@ -19,6 +19,7 @@ import PeopleRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import RuleFolderRoundedIcon from '@mui/icons-material/RuleFolderRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import "../CSS/sidebar.css"
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useNavigate } from "react-router-dom";
@@ -130,6 +131,12 @@ function  SidebarComponent() {
                     <NavLink style={{display: "flex",}} to="/fixedAssets" className="link">
                     <VideoLabelRoundedIcon className="icon"/>
                     <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Fixed Assets</span>            
+                    </NavLink>
+                </div>
+                <div className="item" style={{justifyContent: isOpen ? 'flex-start' : 'center'}} >
+                    <NavLink style={{display: "flex",}} to="/inventory" className="link">
+                    <DnsRoundedIcon className="icon"/>
+                    <span className="text" style={{display: isOpen ? 'block' : 'none'}}>Inventory</span>            
                     </NavLink>
                 </div>
                 <div className="item" style={{justifyContent: isOpen ? 'flex-start' : 'center'}} >
