@@ -147,7 +147,7 @@ function Inventory() {
     })
     .then(response => response.json())
     .then((data) => {
-        console.log(data)
+       
         if (data.message === "Inventory created successfully"){
             toast("Inventory created successfully", {
                 position: "top-center",
@@ -402,7 +402,7 @@ function Inventory() {
                             <div className="action-modal">
                               <span
                                 onClick={() =>
-                                  navigate(`/spaces/view/${item.name}`, {
+                                  navigate(`/inventory/${item.name}`, {
                                     state: { id: item.id },
                                   })
                                 }

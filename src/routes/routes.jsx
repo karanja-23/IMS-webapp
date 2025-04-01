@@ -16,6 +16,7 @@ import ViewAssets from "../pages/viewAssets"
 import ViewReturns from "../pages/viewReturns"
 import ViewSpace from "../pages/viewspace"
 import Inventory from "../pages/inventory"
+import InventoryItems from "../pages/inventoryItems"
 const routes = [
     {
         path: "/",
@@ -28,6 +29,10 @@ const routes = [
     {
         path: "/inventory",
         element: <Inventory />
+    },
+    {
+        path: "/inventory/:id",
+        element: <InventoryItems />
     }
     ,
     {
