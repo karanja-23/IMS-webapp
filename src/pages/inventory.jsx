@@ -8,7 +8,7 @@ import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import { useNavigate } from "react-router-dom";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
-
+import Loading from "../components/loading";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import {
   Table,
@@ -46,14 +46,17 @@ function Inventory() {
     setInventories,
   } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingInventoryDetails,setLoadingInventoryDetails] = useState(false)
   const [addInventory, setAddInventory] = useState(false);
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState("")
   const [cost, setCost] = useState("")
   const [search, setSearch] = useState("");
+  const [edit, setEdit] = useState(false)
+  const [quantity, setQuantity] =useState("")
   const [inventoryCategories, setInventoryCategories] = useState([]);
   const [actionRowId, setActionRowId] = useState(null);
-  const key = "Composed Table";
+  const [currentInventory, setCurrentInventory] = useState([])
   const [currentPage, setCurrentPage] = useState(0);
   const [currentSpaceId, setCurrentSpaceId] = useState(null);
   const theme = useTheme(getTheme());
@@ -108,12 +111,8 @@ function Inventory() {
   }, [loggedIn]);
   useEffect(() => {
     getInventoryCategories();
-    const currentInventories = localStorage.getItem("inventories");
-    if (currentInventories) {
-      setInventories(JSON.parse(currentInventories));
-    } else {
-      getInventories();
-    }
+    getInventories();
+    
   }, []);
 
   function getInventories() {
@@ -131,63 +130,58 @@ function Inventory() {
       });
   }
 
-  function addNewSpace(event) {
-    event.preventDefault();
-    if (name === "" || location === "" || description === "") {
-      toast("Please enter all the details", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        className: "toast-message",
-        bodyClassName: "toast-message-body",
-      });
-    } else {
-      const newSpace = {
+  function addNewInventory(event){
+    event.preventDefault()
+    const newInventory = {
         name: name,
-        location: location,
-        description: description,
-      };
-
-      fetch("https://mobileimsbackend.onrender.com/spaces", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newSpace),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if ((data["message"] = "Space created successfully")) {
-            toast("Space added succesfully", {
-              position: "top-center",
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-              className: "toast-message",
-              bodyClassName: "toast-message-body",
-            });
-          }
-        })
-        .then(() => {
-          getSpaces();
-          setTimeout(() => {
-            setAddInventory(false);
-          }, 2000);
-        });
+        category_id: categoryId,
+        unit_cost: cost
     }
-    event.target.reset();
-    setName("");
-    setLocation("");
-    setDescription("");
+    console.log(newInventory)
+    fetch('https://mobileimsbackend.onrender.com/inventory',{
+        method: 'POST',
+        headers :{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newInventory) 
+    })
+    .then(response => response.json())
+    .then((data) => {
+        console.log(data)
+        if (data.message === "Inventory created successfully"){
+            toast("Inventory created successfully", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                className: "toast-message",
+                bodyClassName: "toast-message-body",
+              });
+            getInventories() 
+            setAddInventory(false)            
+            clearStates()
+        }
+        else{
+            toast("Failed to create inventory", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                className: "toast-message",
+                bodyClassName: "toast-message-body",
+              });
+        }
+
+    })
+    
   }
   async function getInventoryCategories() {
     fetch("https://mobileimsbackend.onrender.com/inventory/categories", {
@@ -205,10 +199,89 @@ function Inventory() {
     setSearch(event.target.value);
     setCurrentPage(0);
   }
-
+  function showEditModal(id){
+    setActionRowId(null)
+    setLoadingInventoryDetails(true)
+    fetch(`https://mobileimsbackend.onrender.com/inventory/${id}`,{
+        method:'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then((data) =>{
+        setCurrentInventory(data)
+        setName(data.name)
+        setCategoryId(data.category['id'])
+        setCost(data.unit_cost)
+        setQuantity(data.quantity)
+    })
+    .then(() =>{
+        setLoadingInventoryDetails(false)
+        setEdit(true)
+    })
+  }
+  function handleEdit(event){
+    event.preventDefault()
+    const editedInventory = {
+        name: name,
+        category_id: categoryId,
+        quantity: quantity,
+        unit_cost: cost
+    }
+    fetch(`https://mobileimsbackend.onrender.com/inventory/${currentInventory.id}`,{
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editedInventory)
+    })
+    .then(response => response.json()) 
+    .then((data) =>{
+        if (data.name){
+            toast("Inventory updated successfully", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                className: "toast-message",
+                bodyClassName: "toast-message-body",
+            });
+            getInventories()
+            setEdit(false)
+            clearStates()
+        }
+        else{
+            toast("Error in updating inventory", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                className: "toast-message",
+                bodyClassName: "toast-message-body",
+            });
+            setEdit(false)
+        }
+    })
+  }
+  function clearStates(){
+    setName("")
+    setCategoryId("")
+    setCost("")
+    setQuantity("")
+    
+  }
   return (
     <>
-      <div className="main" style={{ opacity: addInventory ? 0.4 : 0.99 }}>
+      <div className="main" style={{ opacity: addInventory || edit || loadingInventoryDetails ? 0.4 : 0.99 }}>
         <SidebarComponent />
         <ToastContainer />
         <div
@@ -220,6 +293,7 @@ function Inventory() {
             transition: "0.3s",
           }}
         >
+          {loadingInventoryDetails? <Loading />: null}  
           <div
             className="header"
             style={{
@@ -300,7 +374,7 @@ function Inventory() {
                 <>
                   <Header>
                     <HeaderRow>
-                      <HeaderCell>Item Name</HeaderCell>
+                      <HeaderCell>Inventory Name</HeaderCell>
                       <HeaderCell>Category</HeaderCell>
                       <HeaderCell>Quantity</HeaderCell>
                       <HeaderCell>Unit cost</HeaderCell>
@@ -314,7 +388,7 @@ function Inventory() {
                         <Cell>{item.name}</Cell>
                         <Cell>{item.category["name"]}</Cell>
                         <Cell>{item.quantity}</Cell>
-                        <Cell>{item.unit_cost}</Cell>
+                        <Cell>Ksh. {item.unit_cost.toLocaleString()}</Cell>
                         <Cell>
                           <MoreVertRoundedIcon
                             onClick={(event) => {
@@ -336,7 +410,13 @@ function Inventory() {
                                 <RemoveRedEyeRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />
-                                view all
+                                view items
+                              </span>
+                              <span onClick={() => showEditModal(item.id)}>
+                                <EditRoundedIcon
+                                  style={{ fontSize: "1.3em" }}
+                                />
+                                edit
                               </span>
                             </div>
                           ) : null}
@@ -370,19 +450,19 @@ function Inventory() {
       {addInventory ? (
         <div className="add_user_modal">
           <ToastContainer />
-          <h3 style={{ opacity: "0.75" }}>Add new space</h3>
+          <h3 style={{ opacity: "0.75" }}>Add new inventory</h3>
           <CloseRoundedIcon
             onClick={() => setAddInventory(false)}
             className="close-btn"
           />
-          <form onSubmit={addNewSpace}>
+          <form onSubmit={addNewInventory}>
             <label htmlFor="name">Name</label>
             <input
               id="name"
               onChange={(event) => setName(event.target.value)}
               value={name}
               type="text"
-              placeholder="Name"
+              placeholder="Enter inventory name"
             />
             <label htmlFor="category"></label>
             <select id="category" value={categoryId} onChange={(event) => setCategoryId(event.target.value)} >
@@ -393,13 +473,63 @@ function Inventory() {
                     ))
                 ): null}
             </select>
-            <label htmlFor="cost">Cost</label>
+            <label htmlFor="cost">Unit cost</label>
             <input
               id="cost"
               onChange={(event) => setCost(event.target.value)}
               value={cost}
+              type="number"
+              placeholder="Enter cost of inventory per unit"
+            />
+            
+
+            <input className="button" type="submit" value="Submit" />
+          </form>
+        </div>
+      ) : null}
+      {edit ? (
+        <div className="add_user_modal">
+        <ToastContainer />
+        <h3 style={{ opacity: "0.75" }}>edit new inventory</h3>
+        <CloseRoundedIcon
+          onClick={() => {            
+            setEdit(false)
+          }}
+          className="close-btn"
+        />
+        <form onSubmit={handleEdit}>
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              onChange={(event) => setName(event.target.value)}
+              value={name}
               type="text"
-              placeholder="Location"
+              placeholder="Enter inventory name"
+            />
+            <label htmlFor="category"></label>
+            <select id="category" value={categoryId} onChange={(event) => setCategoryId(event.target.value)} >
+                <option value={0}>Select category </option>
+                {inventoryCategories ? (
+                    inventoryCategories.map((category, index) =>(
+                        <option value={category.id} key={index}>{category.name}</option>
+                    ))
+                ): null}
+            </select>
+            <label htmlFor="cost">Unit cost</label>
+            <input
+              id="cost"
+              onChange={(event) => setCost(event.target.value)}
+              value={cost}
+              type="number"
+              placeholder="Enter cost of inventory per unit"
+            />
+            <label htmlFor="quantity">Quantity</label>
+            <input
+              id="quantity"
+              onChange={(event) => setQuantity(event.target.value)}
+              value={quantity}
+              type="number"
+              placeholder="Enter cost of inventory per unit"
             />
             
 
