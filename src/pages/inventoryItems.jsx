@@ -8,7 +8,12 @@ import image from "../assets/space.png";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import "../CSS/users.css";
+import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
+import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import Notification from "../components/notification";
+import { ToastContainer, toast } from "react-toastify";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import pluralize from "pluralize";
 import {
   Table,
   Header,
@@ -26,13 +31,25 @@ function InventoryItems() {
   const { name } = useParams();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
+  const [vendorId, setVendorId] = useState("")
   const id = location.state?.id;
+  const  [categories, setCategories] = useState([])
+  const [serialNumber, setSerialNumber] = useState("")
   const [inventory, setInventory] = useState([])
   const [inventoryItems, setInventoryItems] = useState([])
+  const [date, setDate] = useState("")
+  const [cost, setCost] = useState("")
+  const [quantity, setQuantity] = useState("")
+  const [spaces, setSpaces] =useState([])
+  const [vendors, setVendors] =useState([])
+  const [description, setDescription] =useState([])
+  const [categoryId, setCategoryId] = useState("")
+  const [spaceId, setSpaceId] = useState([])
   const [search, setSearch] = useState("");
+  const [condition, setCondition] = useState("")
   const [currentPage, setCurrentPage] = useState(0);
   const [actionRowId, setActionRowId] = useState(null);
-  const [userHistory, setUserHistory] = useState([]);
+  const [showAddItemModal, setShowAddItemModal] = useState(false)
   const filteredData = inventoryItems
   ?.filter((item) =>
     item?.serial_number?.toLowerCase().includes(search.toLowerCase())
@@ -48,7 +65,34 @@ function InventoryItems() {
 
   useEffect(() => {
     getInventories()
+    getVendors()
+    getSpaces()
+    getInventoryCategories()
   }, []);
+  async function getInventoryCategories() {
+    fetch("https://mobileimsbackend.onrender.com/inventory/categories", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data);
+      });
+  }
+  async function getSpaces(){
+    fetch("https://mobileimsbackend.onrender.com/spaces/all", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+            setSpaces(data)
+        });
+  }
   function getInventories() {
     fetch(`https://mobileimsbackend.onrender.com/inventory/${id}`, {
       method: "GET",
@@ -63,9 +107,95 @@ function InventoryItems() {
         setLoading(false)
       });
   }
+  async function getVendors(){
+    fetch("https://mobileimsbackend.onrender.com/vendors", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+            setVendors(data)
+        });
+  }
   function handleSearch(event) {
     setSearch(event.target.value);
     setCurrentPage(0);
+  }
+  function addNewItem(){
+    setShowAddItemModal(true)
+
+  }
+  function handleAddInventoryItem(event){
+    event.preventDefault()
+    const newInventoryItem = {
+        inventory_id : inventory.id,
+        serial_number: serialNumber,
+        description: description,
+        date_acquired: date,
+        condition: condition,
+        quantity:Number(quantity),
+        vendor_id: Number(vendorId),
+        unit_cost: cost,
+        space_id: Number(spaceId)
+    }
+    console.log(newInventoryItem)
+    fetch('https://mobileimsbackend.onrender.com/inventory/items',{
+        method: 'POST',
+        headers:{
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(newInventoryItem)
+    })
+    .then(response => response.json())
+    .then((data) =>{
+        if (data.message === "Inventory item created successfully"){
+            toast("Inventory item created successfully", {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                className: "toast-message",
+                bodyClassName: "toast-message-body",
+              });
+              getInventories()
+              updateInventoryItemNumber()
+              setTimeout(() =>{
+                setShowAddItemModal(false)
+              },2500)
+        }
+        else{
+            toast("Faoled to create inventory item!", {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                className: "toast-message",
+                bodyClassName: "toast-message-body",
+              });
+        }
+    })
+
+  }
+  console.log(inventory.id)
+  function updateInventoryItemNumber(){
+    fetch(`https://mobileimsbackend.onrender.com//update/quantity/${inventory.id}`,{
+        method: 'PUT'
+    })    
+    .then(response => response.json())
+    .then((data) => {
+        console.log(data)
+    })
+    
   }
   return (
     <div className="main">
@@ -112,7 +242,7 @@ function InventoryItems() {
               flexDirection: "column",
               maxWidth: "90%",
               opacity: "0.8",
-              marginTop: "40px"
+              marginTop: "40px",              
               
             }}
           >
@@ -144,7 +274,7 @@ function InventoryItems() {
               ></input>
               <div
                 onClick={() => {
-                  setAddAsset(true);
+                 addNewItem()
                 }}
                 style={{
                   display: "flex",
@@ -168,6 +298,7 @@ function InventoryItems() {
               data={{ nodes: paginatedData }}
               theme={theme}
               className="tables"
+              style={{paddingBottom:"40px"}}
             >
                 {(tableList) => (
                 <>
@@ -177,6 +308,7 @@ function InventoryItems() {
                       <HeaderCell>Inventory Type</HeaderCell>
                       <HeaderCell>Quantity</HeaderCell>
                       <HeaderCell >Status</HeaderCell>
+                      <HeaderCell>Action</HeaderCell>
                       
                       
                     </HeaderRow>
@@ -189,7 +321,27 @@ function InventoryItems() {
                         <Cell>{item.inventory['name']}</Cell>
                         <Cell>{item.quantity}</Cell>               
                         <Cell>{item.status}</Cell>
-                        
+                        <Cell>
+                          <MoreVertRoundedIcon
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setActionRowId(
+                                actionRowId === item.id ? null : item.id
+                              );
+                            }}
+                          />
+                           {actionRowId === item.id ? (
+                             <div className="action-modal">
+                                                              <span onClick={(() => navigate(`/fixedAssets/${item.name}`,{state:{id:item.id}}))}>
+                                <RemoveRedEyeRoundedIcon
+                                  style={{ fontSize: "1.3em" }}
+                                />
+                                view
+                              </span>
+                                
+                             </div>
+                           ): null}
+                          </Cell>
                       </Row>
                     ))}
                   </Body>
@@ -218,6 +370,116 @@ function InventoryItems() {
           </>
         )}
       </div>
+      {showAddItemModal ? (
+       <div className="add_asset_modal">
+       <ToastContainer />
+       <h3 style={{ opacity: "0.75" }}>Add a new {pluralize.singular(inventory.name || "item")}</h3>
+       <CloseRoundedIcon
+         onClick={() => {
+             setShowAddItemModal(false)
+             
+         }}
+         className="close-btn"
+       />
+       <form onSubmit={handleAddInventoryItem}>
+         <div  className="form-container" style={{display: 'flex',gap:'40px'}}>
+         <div className="form-groups">
+
+         <label htmlFor="serial">Serial Number</label>
+         <input
+           id="serial"
+           onChange={(event) => setSerialNumber(event.target.value)}
+           value={serialNumber}
+           type="text"
+           placeholder="enter item serial number"
+         />
+         <label htmlFor="category">Category</label>
+         <select value={categoryId} id="category" onChange={(event)=>setCategoryId(event.target.value)} >
+             <option value={0}>Select item's category</option>
+             {categories?.map((category, index) => (
+                 <option key={index} value={category.id}>{category.name}</option>
+
+             ))}
+         </select>
+         <label htmlFor="condition">Item Condition</label>
+         <input
+           id="condition"
+           onChange={(event) => setCondition(event.target.value)}
+           value={condition}
+           type="text"
+           placeholder="enter item's condition"
+         />
+         <label htmlFor="quantity">Quantity</label>
+         <input
+           id="quantity"
+           onChange={(event) => setQuantity(event.target.value)}
+           value={quantity}
+           type="text"
+           placeholder="enter item quantity"
+         />
+
+         </div>
+
+         <div className="form-groups">
+         <label htmlFor="cost">Purchase cost</label>
+         <input
+           id="cost"
+           onChange={(event) => setCost(event.target.value)}
+           value={cost}
+           type="number"
+           placeholder="enter item's cost"
+         />
+         <label htmlFor="date">Date acquired</label>
+         <input
+           id="date"
+           onChange={(event) => setDate(event.target.value)}
+           value={date}
+           type="date"
+         />
+         <label htmlFor="space">Current Location</label>
+         <select value={spaceId} id="space" onChange={(event)=>setSpaceId(event.target.value)}>
+             <option value={0}>Select space</option>
+             {spaces?.map((space,index) =>(
+                 <option value={space.id} key={index}>{space.name}</option>
+             )) }
+         </select>
+
+         <label htmlFor="vendors">Select item's Vendor</label>
+         <select value={vendorId} id="vendors" onChange={(event) => setVendorId(event.target.value)}>
+             <option value={0}>Select vendor</option>
+             {vendors?.map((vendor,index) =>(
+                 <option value={vendor.id} key={index}>{vendor.name}</option>
+             )) }
+         </select>
+
+         </div>
+                     
+         </div>
+         
+         <label htmlFor="description">Description</label>
+         <textarea
+           id="description"
+           className="desc"
+           onChange={(event) => setDescription(event.target.value)}
+           value={description}
+           placeholder="Enter item description..."
+           rows={4}
+           style={{
+             width: "100%",
+             minHeight: "100px",
+             resize: "vertical",
+             padding: "10px",
+             borderRadius: "5px",
+             border: "1px solid #ccc",
+             fontSize: "16px",
+           }}
+         ></textarea>
+
+         <input className="button" type="submit" style={{width: '60%'}} value="Submit" />
+       </form>
+       
+     </div>
+      ) : null}
     </div>
   );
 }
