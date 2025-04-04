@@ -47,7 +47,7 @@ function ViewInventoryItem() {
 
   const theme = useTheme(getTheme());
   useEffect(() => {
-    fetch(`https://mobileimsbackend.onrender.com/assets/${id}`, {
+    fetch(`https://mobileimsbackend.onrender.com/inventory/items/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

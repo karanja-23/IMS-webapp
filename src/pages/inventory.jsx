@@ -458,7 +458,7 @@ function Inventory() {
       {addInventory ? (
         <div className="add_user_modal">
           <ToastContainer />
-          <h3 style={{ opacity: "0.75" }}>Add new inventory</h3>
+          <h3 style={{ opbacity: "0.75" }}>Add new inventory</h3>
           <CloseRoundedIcon
             onClick={() => setAddInventory(false)}
             className="close-btn"
