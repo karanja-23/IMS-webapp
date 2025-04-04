@@ -71,7 +71,11 @@ function Inventory() {
 
   useEffect(() => {
     if (loggedIn) {
-      setInventories(JSON.parse(localStorage.getItem("inventories")));
+        const   inventoriesInAlphabeticalOrder = JSON.parse(localStorage.getItem("inventories")).sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          
+      setInventories(inventoriesInAlphabeticalOrder);
       navigate("/inventory");
     } else {
       const token = localStorage.getItem("token");
@@ -124,7 +128,11 @@ function Inventory() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setInventories(data);
+        const inventoriesInAlphabeticalOrder = data.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          
+      setInventories(inventoriesInAlphabeticalOrder);
         localStorage.removeItem("inventories");
         localStorage.setItem("inventories", JSON.stringify(data));
       });
@@ -450,7 +458,7 @@ function Inventory() {
       {addInventory ? (
         <div className="add_user_modal">
           <ToastContainer />
-          <h3 style={{ opacity: "0.75" }}>Add new inventory</h3>
+          <h3 style={{ opbacity: "0.75" }}>Add new inventory</h3>
           <CloseRoundedIcon
             onClick={() => setAddInventory(false)}
             className="close-btn"
