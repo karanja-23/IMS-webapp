@@ -1,6 +1,6 @@
 import SidebarComponent from "../components/sidebar";
 import { useContext, useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
@@ -29,6 +29,7 @@ function InventoryItems() {
   const LIMIT = 5;
   const { isOpen } = useContext(AppContext);
   const { name } = useParams();
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const [vendorId, setVendorId] = useState("")
@@ -332,7 +333,7 @@ function InventoryItems() {
                           />
                            {actionRowId === item.id ? (
                              <div className="action-modal">
-                                                              <span onClick={(() => navigate(`/fixedAssets/${item.name}`,{state:{id:item.id}}))}>
+                                 <span onClick={(() => navigate(`/inventory/${item.inventory['name']}/${item.serial_number}`,{state:{id:item.id}}))}>
                                 <RemoveRedEyeRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />

@@ -17,6 +17,7 @@ import ViewReturns from "../pages/viewReturns"
 import ViewSpace from "../pages/viewspace"
 import Inventory from "../pages/inventory"
 import InventoryItems from "../pages/inventoryItems"
+import ViewInventoryItem from "../pages/viewInventoryItems"
 const routes = [
     {
         path: "/",
@@ -33,6 +34,10 @@ const routes = [
     {
         path: "/inventory/:id",
         element: <InventoryItems />
+    },
+    {
+        path : "/inventory/:name/:id",
+        element: <ViewInventoryItem />
     }
     ,
     {
