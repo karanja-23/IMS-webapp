@@ -5,6 +5,7 @@ import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
 import image from "../assets/user.png";
+import pluralize from "pluralize";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import "../CSS/users.css";
 import Notification from "../components/notification";
@@ -53,7 +54,8 @@ function ViewUsers() {
       .then((data) => {
         if (data) {
           setCurrentUser(data);
-          const sortedHistory = data.history.sort((a, b) => {
+          const history = [...data.history, ...data.inventory_history]
+          const sortedHistory = history.sort((a, b) => {
             return new Date(b.date) - new Date(a.date);
           })
           setUserHistory(sortedHistory);
@@ -166,7 +168,8 @@ function ViewUsers() {
                     <HeaderRow>
                       <HeaderCell>Date</HeaderCell>
                       <HeaderCell>Serial number</HeaderCell>
-                      <HeaderCell >Asset name</HeaderCell>
+                      <HeaderCell>Type</HeaderCell>
+                      <HeaderCell >Name</HeaderCell>
                       <HeaderCell>Action</HeaderCell>
                       
                     </HeaderRow>
@@ -175,9 +178,10 @@ function ViewUsers() {
                   <Body>
                     {tableList.map((item, index) => (
                       <Row key={index} item={item}>
-                                                 <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
-                        <Cell>{item.asset['serial_number']}</Cell> 
-                        <Cell>{item.asset['name']}</Cell>               
+                       <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
+                        <Cell>{item.asset? item.asset['serial_number']: item.inventory_item['serial_number'] }</Cell> 
+                        <Cell>{item.type}</Cell>
+                        <Cell>{item.asset ? item.asset['name'] : pluralize.singular(item.name)}</Cell>               
                         <Cell>{item.status}</Cell>
                         
                       </Row>

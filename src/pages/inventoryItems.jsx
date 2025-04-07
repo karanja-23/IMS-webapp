@@ -272,7 +272,7 @@ function InventoryItems() {
       }
     })
     .then(() => {
-      fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}/history`, {
+      fetch(`https://mobileimsbackend.onrender.com/inventory/${currentAssetId}/history`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
