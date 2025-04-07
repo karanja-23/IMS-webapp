@@ -4,6 +4,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
+import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import image from "../assets/space.png";
 import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
@@ -34,6 +35,7 @@ function InventoryItems() {
   const location = useLocation();
   const [vendorId, setVendorId] = useState("")
   const id = location.state?.id;
+  const [currentAssetId, setCurrentAssetId] = useState("")
   const  [categories, setCategories] = useState([])
   const [serialNumber, setSerialNumber] = useState("")
   const [inventory, setInventory] = useState([])
@@ -48,9 +50,13 @@ function InventoryItems() {
   const [spaceId, setSpaceId] = useState([])
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState("")
+  const [showAssignModal, setShowAssignModal] = useState(false)
+  const [showAssignUserModal, setShowAssignUserModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [actionRowId, setActionRowId] = useState(null);
   const [showAddItemModal, setShowAddItemModal] = useState(false)
+  const [users, setUsers] = useState([])
+  const [userId, setUserId] = useState("")
   const filteredData = inventoryItems
   ?.filter((item) =>
     item?.serial_number?.toLowerCase().includes(search.toLowerCase())
@@ -69,6 +75,7 @@ function InventoryItems() {
     getVendors()
     getSpaces()
     getInventoryCategories()
+    getUsers()
   }, []);
   async function getInventoryCategories() {
     fetch("https://mobileimsbackend.onrender.com/inventory/categories", {
@@ -81,6 +88,19 @@ function InventoryItems() {
       .then((data) => {
         setCategories(data);
       });
+  }
+  async function getUsers(){
+    fetch('https://mobileimsbackend.onrender.com/users',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }        
+    })
+    .then(response => response.json())
+    .then(data => {
+        setUsers(data)
+    })
+
   }
   async function getSpaces(){
     fetch("https://mobileimsbackend.onrender.com/spaces/all", {
@@ -198,10 +218,79 @@ function InventoryItems() {
     })
     
   }
+  function showAssignInventory(id,status){
+    setCurrentAssetId(id)
+    setActionRowId(null)
+    if (status === "available"){
+      setShowAssignModal(true)
+    }
+    else{
+      toast("Asset already assigned", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        className: "toast-message",
+        bodyClassName: "toast-message-body",
+      });
+    }
+  }
+  function handleAssignAsset(){
+    
+    fetch(`https://mobileimsbackend.onrender.com/inventory/items/${currentAssetId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({   
+        assigned_to: Number(userId),
+        space_id: Number(spaceId),
+        status: "borrowed"
+      })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "borrowed") {
+        toast("inventory assigned successfully", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          className: "toast-message",
+          bodyClassName: "toast-message-body",
+        });
+        getInventories()
+        setShowAssignUserModal(false)
+      }
+    })
+    .then(() => {
+      fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({   
+          assigned_to: Number(userId),
+          space_id: Number(spaceId),
+          status: "borrowed"
+        })
+
+      })
+      
+    })
+  }
   return (
     <div className="main">
       <SidebarComponent />
-
+      <ToastContainer />
       <div
         className="content"
         style={{
@@ -338,6 +427,12 @@ function InventoryItems() {
                                   style={{ fontSize: "1.3em" }}
                                 />
                                 view
+                              </span>
+                              <span onClick={() => showAssignInventory(item.id,item.status)}>
+                                <AssignmentIndRoundedIcon 
+                                  style={{ fontSize: "1.3em" }}
+                                />
+                                assign
                               </span>
                                 
                              </div>
@@ -481,6 +576,59 @@ function InventoryItems() {
        
      </div>
       ) : null}
+      {showAssignModal ? (
+        <>
+          <div className="assign_asset_modal">
+            <ToastContainer />
+            <h3 style={{ opacity: "0.75" }}>Assign Asset</h3>
+            <CloseRoundedIcon
+              onClick={() => {
+                setShowAssignModal(false);
+              }}
+              className="close-btn"
+            />
+            <button onClick={() =>{
+               setShowAssignModal(false)
+               setActionRowId(null)
+               setShowAssignUserModal(true)
+
+            }}>Assign asset to a user</button>
+            <button>Assign to space</button>
+            
+          </div>
+        </>
+      ) : null}
+      {showAssignUserModal ? (
+        <div className="assign_asset_modal">
+          <h4>Assign asset to:</h4>
+          <CloseRoundedIcon
+              onClick={() => {
+                setShowAssignUserModal(false);
+              }}
+              className="close-btn"
+            />
+          <label htmlFor="user">Select user</label>
+          <select value={userId} onChange={(event) => setUserId(event.target.value)}>
+            <option value={0}>Select user</option>
+            {users?.map((user, index) => (
+              <option value={user.id} key={index}>
+                {user.username}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="space">Select space</label>
+          <select value={spaceId} onChange={(event) => setSpaceId(event.target.value)}>
+            <option value={0}>Select space</option>
+            {spaces?.map((space, index) => (
+              <option value={space.id} key={index}>
+                {space.name}
+              </option>
+            ))}
+          </select>
+          <button onClick={() => handleAssignAsset()}>Assign</button>
+
+        </div>
+      ): null}
     </div>
   );
 }

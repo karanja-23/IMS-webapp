@@ -4,6 +4,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
+import { ToastContainer, toast } from "react-toastify";
 import image from "../assets/barcode.png";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import "../CSS/viewAssets.css";
@@ -78,7 +79,7 @@ function ViewInventoryItem() {
   return (
     <div className="main">
       <SidebarComponent />
-
+      <ToastContainer />
       <div
         className="content"
         style={{
@@ -96,7 +97,7 @@ function ViewInventoryItem() {
           }}
         >
           <div className="title">
-            {loading ? null : <h3>Asset / {inventoryName} / {currentAsset.serial_number} </h3>}
+            {loading ? null : <h3>Inventory / {inventoryName} / {currentAsset.serial_number} </h3>}
           </div>
           <Notification />
         </div>
@@ -119,7 +120,7 @@ function ViewInventoryItem() {
               <div className="profile-details">
                 <div style={{ width: "30%" }}>
                   <span>
-                    <strong>Asset name:</strong> {inventoryName}
+                    <strong>Inventory name:</strong> {inventoryName}
                   </span>
                   <span>
                     <strong>Serial number:</strong> {currentAsset.serial_number}
@@ -127,10 +128,16 @@ function ViewInventoryItem() {
                   <span>
                     <strong>Status:</strong> {currentAsset.status}
                   </span>
+                  <span>
+                    <strong>Condition:</strong> {currentAsset.condition}
+                  </span>
                 </div>
                 <div style={{ width: "60%" }}>
                   <span>
-                    <strong>Category:</strong> to be set
+                    <strong>Date acquired:</strong>{currentAsset.date_acquired}
+                  </span>
+                  <span>
+                    <strong>Unit cost:</strong>Ksh. {currentAsset.unit_cost}
                   </span>
                   <span>
                     <strong>Current Location:</strong>{" "}
@@ -152,7 +159,7 @@ function ViewInventoryItem() {
               
             }}
           >
-            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>Asset history</h3>
+            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>Inventory history</h3>
             <input
                 type="search"
                 placeholder="search ..."
