@@ -60,10 +60,11 @@ function ViewInventoryItem() {
         if (data) {
           
           setCurrentAsset(data)
-          { /*const sortedHistory = data.sort((a, b) => {
-            return new Date(b.date_acquired) - new Date(a.date_acquired);
+          console.log(data)
+          const sortedHistory = data['history'].sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
           })
-          setAssetHistory(sortedHistory)*/}
+          setAssetHistory(sortedHistory)
           
           setLoading(false);
           
