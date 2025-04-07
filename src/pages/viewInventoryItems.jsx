@@ -30,6 +30,7 @@ function ViewInventoryItem() {
   const [currentPage, setCurrentPage] = useState(0);
   const location = useLocation();
   const [currentAsset, setCurrentAsset] = useState(null);
+  const inventoryName = location.state?.name;
   const id = location.state?.id;
   const [search, setSearch] = useState("");
   const [actionRowId, setActionRowId] = useState(null);
@@ -56,11 +57,12 @@ function ViewInventoryItem() {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
+          
           setCurrentAsset(data)
-          const sortedHistory = data.history.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
+          { /*const sortedHistory = data.sort((a, b) => {
+            return new Date(b.date_acquired) - new Date(a.date_acquired);
           })
-          setAssetHistory(sortedHistory)
+          setAssetHistory(sortedHistory)*/}
           
           setLoading(false);
           
@@ -94,7 +96,7 @@ function ViewInventoryItem() {
           }}
         >
           <div className="title">
-            {loading ? null : <h3>Asset / {currentAsset.name}</h3>}
+            {loading ? null : <h3>Asset / {inventoryName} / {currentAsset.serial_number} </h3>}
           </div>
           <Notification />
         </div>
@@ -117,7 +119,7 @@ function ViewInventoryItem() {
               <div className="profile-details">
                 <div style={{ width: "30%" }}>
                   <span>
-                    <strong>Asset name:</strong> {currentAsset.name}
+                    <strong>Asset name:</strong> {inventoryName}
                   </span>
                   <span>
                     <strong>Serial number:</strong> {currentAsset.serial_number}
@@ -128,7 +130,7 @@ function ViewInventoryItem() {
                 </div>
                 <div style={{ width: "60%" }}>
                   <span>
-                    <strong>Category:</strong> {currentAsset.category["name"]}
+                    <strong>Category:</strong> to be set
                   </span>
                   <span>
                     <strong>Current Location:</strong>{" "}

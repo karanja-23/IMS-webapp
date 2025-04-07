@@ -187,7 +187,7 @@ function InventoryItems() {
     })
 
   }
-  console.log(inventory.id)
+  
   function updateInventoryItemNumber(){
     fetch(`https://mobileimsbackend.onrender.com//update/quantity/${inventory.id}`,{
         method: 'PUT'
@@ -333,7 +333,7 @@ function InventoryItems() {
                           />
                            {actionRowId === item.id ? (
                              <div className="action-modal">
-                                 <span onClick={(() => navigate(`/inventory/${item.inventory['name']}/${item.serial_number}`,{state:{id:item.id}}))}>
+                                 <span onClick={(() => navigate(`/inventory/${item.inventory['name']}/${item.serial_number}`,{state:{id:item.id, name:item.inventory['name']}}))}>
                                 <RemoveRedEyeRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />
