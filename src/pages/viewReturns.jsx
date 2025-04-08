@@ -9,6 +9,7 @@ import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import "../CSS/viewAssets.css";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import Notification from "../components/notification";
+import pluralize from "pluralize";
 import {
     Table,
     Header,
@@ -30,13 +31,14 @@ function ViewReturns() {
   const location = useLocation();
   const [currentAsset, setCurrentAsset] = useState(null);
   const id = location.state?.id;
+  const type = location.state.type
   const [search, setSearch] = useState("");
   const [actionRowId, setActionRowId] = useState(null);
   const [assetHistory, setAssetHistory] = useState([])
   const filteredData = assetHistory?.filter((item) =>
     item.assigned_to?.username
       ? item.assigned_to.username.toLowerCase().includes(search.toLowerCase())
-      : true // ✅ Include entries where assigned_to is null
+      : true 
   )
   const totalPages = Math.ceil(filteredData.length / LIMIT);
   const paginatedData = filteredData?.slice(
@@ -46,14 +48,37 @@ function ViewReturns() {
 
   const theme = useTheme(getTheme());
   useEffect(() => {
-    fetch(`https://mobileimsbackend.onrender.com/assets/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    if (type === "fixed asset"){
+      fetch(`https://mobileimsbackend.onrender.com/assets/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data) {
+            setCurrentAsset(data);
+            const historyByDate = data.history.sort((a, b) => {
+              const dateA = new Date(a.date);
+              const dateB = new Date(b.date);
+              return dateB - dateA;
+            })
+            setAssetHistory(historyByDate)
+            setLoading(false);
+            
+          }
+        });
+    }
+    else{
+      fetch(`https://mobileimsbackend.onrender.com/inventory/items/${id}`,{
+        method: 'GET',
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then ((data) =>{
         if (data) {
           setCurrentAsset(data);
           const historyByDate = data.history.sort((a, b) => {
@@ -65,7 +90,9 @@ function ViewReturns() {
           setLoading(false);
           
         }
-      });
+      })
+    }
+    
   }, []);
 
   function handleSearch(event) {
@@ -93,7 +120,7 @@ function ViewReturns() {
           }}
         >
           <div className="title">
-            {loading ? null : <h3>Asset / {currentAsset.name}</h3>}
+            {loading ? null : <h3>{currentAsset.name ? "Asset" : "Inventory"}/ {currentAsset?.name ? currentAsset.name : currentAsset.inventory['name']}{currentAsset.inventory? `/${currentAsset.serial_number}` :null}</h3>}
           </div>
           <Notification />
         </div>
@@ -116,7 +143,7 @@ function ViewReturns() {
               <div className="profile-details">
                 <div style={{ width: "30%" }}>
                   <span>
-                    <strong>Asset name:</strong> {currentAsset.name}
+                    <strong>Asset name:</strong> {currentAsset.name ? currentAsset.name : currentAsset.inventory['name']}
                   </span>
                   <span>
                     <strong>Serial number:</strong> {currentAsset.serial_number}
@@ -127,7 +154,7 @@ function ViewReturns() {
                 </div>
                 <div style={{ width: "60%" }}>
                   <span>
-                    <strong>Category:</strong> {currentAsset.category["name"]}
+                    <strong>Category:</strong> {currentAsset.category ? currentAsset.category["name"] : "inventory"}
                   </span>
                   <span>
                     <strong>Current Location:</strong>{" "}
@@ -149,7 +176,7 @@ function ViewReturns() {
               
             }}
           >
-            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>Asset history</h3>
+            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>{currentAsset.name ? "Asset" : "Inventory"} history</h3>
             <input
                 type="search"
                 placeholder="search ..."

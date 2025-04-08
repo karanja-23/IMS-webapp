@@ -28,7 +28,7 @@ import Notification from "../components/notification";
 import { AssignmentTurnedInRounded } from "@mui/icons-material";
 import { c } from "@table-library/react-table-library/Feature-dc8674d3";
 function Returns() {
-  const LIMIT = 5;
+  const LIMIT = 7;
   const navigate = useNavigate();
   const {
     loggedIn,
@@ -62,7 +62,7 @@ function Returns() {
   const [showReturnModal, setShowReturnModal] = useState(false);
   const theme = useTheme(getTheme());
   const filteredData = (returns || []).filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item.name? item.name : item.inventory['name'].toLowerCase().includes(search.toLowerCase())
   );
   const totalPages = Math.ceil(filteredData?.length / LIMIT);
   const paginatedData = filteredData?.slice(
@@ -76,6 +76,7 @@ function Returns() {
         a.serial_number.localeCompare(b.serial_number)
       );
       setReturns(assetsInAlphabeticalOrder);
+      console.log(assetsInAlphabeticalOrder)
      
       navigate("/returns");
     } else {
@@ -105,7 +106,7 @@ function Returns() {
             }
           })
           .then(() => {
-            if (assets.length === 0) {
+            if (returns.length === 0) {
               getAssets();
             }
           });
@@ -118,23 +119,41 @@ function Returns() {
     getAssets();
   }, []);
   async function getAssets() {
-    fetch("https://mobileimsbackend.onrender.com/assets", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const assignedAssets = data.filter(asset => asset.status !== "unassigned")
-        localStorage.removeItem("unassingnedassets");
-        localStorage.setItem("unassingnedassets", JSON.stringify(assignedAssets));
-        const assetsInAlphabeticalOrder = assignedAssets.sort((a, b) =>
-          a.serial_number.localeCompare(b.serial_number)
-        );
-        setReturns(assetsInAlphabeticalOrder);
-      });
+    try {
+      const [assetsResponse, inventories] = await Promise.all([
+        fetch("https://mobileimsbackend.onrender.com/assets").then(res => res.json()),
+        getInventories()
+      ]);
+  
+      const allReturns = [...assetsResponse, ...inventories];
+      const assignedAssets = allReturns.filter(asset => asset.status !== "unassigned");
+  
+      localStorage.removeItem("unassingnedassets");
+      localStorage.setItem("unassingnedassets", JSON.stringify(assignedAssets));
+  
+      const assetsInAlphabeticalOrder = assignedAssets.sort((a, b) =>
+        a.serial_number.localeCompare(b.serial_number)
+      );
+  
+      setReturns(assetsInAlphabeticalOrder);
+    } catch (error) {
+      console.error("Error fetching assets or inventories:", error);
+    }
   }
+  
+  async function getInventories() {
+    try {
+      const response = await fetch("https://mobileimsbackend.onrender.com/inventory/items", {
+        method: "GET",
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching inventories:", error);
+      return [];
+    }
+  }
+  
   async function getSpaces(){
     fetch("https://mobileimsbackend.onrender.com/spaces/all", {
         method: "GET",
@@ -311,7 +330,8 @@ function handleReturnAsset(){
                   <Header>
                     <HeaderRow>
                       <HeaderCell>Serial Number</HeaderCell>
-                      <HeaderCell>Asset Name</HeaderCell>
+                      <HeaderCell>Item Name</HeaderCell>
+                      <HeaderCell>Type</HeaderCell>
                       <HeaderCell>Status</HeaderCell>
                       <HeaderCell>Current Location</HeaderCell>
                       <HeaderCell>action</HeaderCell>
@@ -322,7 +342,8 @@ function handleReturnAsset(){
                     {tableList.map((item, index) => (
                       <Row key={item.id} item={item}>
                         <Cell>{item.serial_number}</Cell>
-                        <Cell>{item.name}</Cell>
+                        <Cell>{item.name ? item.name:item.inventory['name']}</Cell>
+                        <Cell>{item.name? "fixed asset": "inventory"}</Cell>
                         <Cell>{item.status}</Cell>
                         <Cell>{item.space["name"]}</Cell>
                         <Cell>
@@ -337,7 +358,7 @@ function handleReturnAsset(){
                           {actionRowId === item.id ? (
                             <div className="action-modal">
                            
-                              <span onClick={(() => navigate(`/returns/${item.name}`,{state:{id:item.id}}))}>
+                              <span onClick={(() => navigate(`/returns/${item.name? item.name: `inventory_${item.serial_number}`}`,{state:{id:item.id,type:item.name? "fixed asset":"inventory"}}))}>
                                 <RemoveRedEyeRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />
