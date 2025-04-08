@@ -35,7 +35,8 @@ function Login() {
 
   async function fetchData(token) {
     try {
-      const [  inventoriesRes,permissionsRes ,requestsRes,spacesRes,categoriesRes,rolesRes, vendorsRes, assetsRes, usersRes] = await Promise.all([
+      const [inventoriesRes,permissionsRes ,requestsRes,spacesRes,categoriesRes,rolesRes, vendorsRes, assetsRes, usersRes, assignedInventoriesRes] = await Promise.all([
+        
         fetch("https://mobileimsbackend.onrender.com/inventory").then((res) => res.json()),
         fetch("https://mobileimsbackend.onrender.com/permissions/all").then((res) => res.json()),
         fetch('https://mobileimsbackend.onrender.com/requests').then((res) => res.json()),
@@ -48,6 +49,7 @@ function Login() {
           method: "GET",
           headers: { "Authorization": `Bearer ${token}` },
         }).then((res) => res.json()),
+        fetch("https://mobileimsbackend.onrender.com/inventory/items").then((res) => res.json()),
       ]);
       setInventories(inventoriesRes)
       setPermissions(permissionsRes)
@@ -60,11 +62,13 @@ function Login() {
       setTeam(usersRes);
       
       const assignedAssets = assetsRes.filter(asset => asset.status !== "unassigned")
-      setReturns(assignedAssets)
+      const assignedInventories = assignedInventoriesRes.filter(inventory=> inventory.status !== "unassigned")
+      console.log([...assignedAssets, ...assignedInventories])
+      setReturns([...assignedAssets, ...assignedInventories])
 
       localStorage.setItem("permissions", JSON.stringify(permissionsRes));
       localStorage.setItem("inventories", JSON.stringify(inventoriesRes));
-      localStorage.setItem("unassingnedassets", JSON.stringify(assignedAssets));
+      localStorage.setItem("unassingnedassets", JSON.stringify([...assignedAssets, ...assignedInventories]));
       localStorage.setItem("requests", JSON.stringify(requestsRes));
       localStorage.setItem("spaces", JSON.stringify(spacesRes));
       localStorage.setItem("categories", JSON.stringify(categoriesRes));

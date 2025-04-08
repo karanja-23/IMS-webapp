@@ -19,6 +19,7 @@ import {
 } from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
+import { ToastContainer } from "react-toastify";
 function ViewSpace() {
   const LIMIT = 5;
   const { isOpen } = useContext(AppContext);
@@ -32,8 +33,10 @@ function ViewSpace() {
   const [actionRowId, setActionRowId] = useState(null);
   const [userHistory, setUserHistory] = useState([]);
   const filteredData = userHistory?.filter((item) =>
-    item?.name?.toLowerCase().includes(search.toLowerCase())
-  );
+    item?.serial_number.toLowerCase().includes(search.toLowerCase())
+  
+  )
+  .sort((a, b) => a.serial_number.localeCompare(b.serial_number));
   const totalPages = Math.ceil(filteredData.length / LIMIT);
   const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
@@ -53,11 +56,12 @@ function ViewSpace() {
       .then((data) => {
         if (data) {
           setCurrentSpace(data);
-          const spacesInAlphabeticalOrder = data.fixed_assets.sort((a, b) =>
-            a.name.localeCompare(b.name)
+          const spacesInAlphabeticalOrder = [...data.fixed_assets, ...data.inventory_items].sort((a, b) =>
+            a.name ? a.name : a.inventory.name.localeCompare(b.name ? b.name : b.inventory['name'])
           );
           
           setUserHistory(spacesInAlphabeticalOrder);
+          console.log(spacesInAlphabeticalOrder)
           
           setLoading(false);
         }
@@ -71,7 +75,7 @@ function ViewSpace() {
   return (
     <div className="main">
       <SidebarComponent />
-
+      <ToastContainer />
       <div
         className="content"
         style={{
@@ -118,12 +122,17 @@ function ViewSpace() {
                     <strong>Location:</strong> {currentSpace.location}
                   </span>
                   <span>
-                    <strong>Fixed asset count:</strong> {currentSpace.fixed_assets.length}
+                    <strong>Status:</strong> {currentSpace.status}
                   </span>
+                  
                 </div>
                 <div>
+                  
                   <span>
-                    <strong>Status:</strong> {currentSpace.status}
+                    <strong>Fixed asset count:</strong> {currentSpace.fixed_assets.length}
+                  </span>
+                  <span>
+                    <strong>Inventory count:</strong> {currentSpace.inventory_items.length}
                   </span>
                   <span>
                     <strong>Description:</strong> {currentSpace.description}
@@ -144,7 +153,7 @@ function ViewSpace() {
             <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>Current assets</h3>
             <input
                 type="search"
-                placeholder="search ..."
+                placeholder="search by serial number ..."
                 value={search}
                 onChange={handleSearch}
                 style={{
@@ -182,8 +191,8 @@ function ViewSpace() {
                     {tableList.map((item, index) => (
                       <Row key={index} item={item}>
                         <Cell>{item.serial_number}</Cell>
-                        <Cell>{item.name}</Cell>
-                        <Cell>{item.category.name}</Cell>               
+                        <Cell>{item.name ? item.name : item.inventory['name']}</Cell>
+                        <Cell>{item.category? "fixed asset" : "inventory"}</Cell>               
                         <Cell>{item.status}</Cell>
                         
                       </Row>
