@@ -187,12 +187,12 @@ function  SidebarComponent() {
                 </div>                            
                 
               </div>
-              <div className="profile">
+              <div className="profile" style={{cursor:'pointer'}} onClick={() =>navigate("/profile")}>
                 <AccountCircleRoundedIcon className="icon" style={{fontSize: '2.3rem'}}/>
                 <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.8rem',fontWeight: '400'}}>{user.username}</span>
               </div>
               
-              <div className="logout" onClick={handleLogout}>
+              <div className="logout"  onClick={handleLogout}>
                 <LogoutRoundedIcon style={{fontSize: '1.5rem'}}/>
                 <span style={{display: isOpen ? 'block' : 'none', fontSize: '0.9rem',fontWeight: '500'}}>Logout</span>
               </div>
