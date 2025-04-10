@@ -50,6 +50,7 @@ function Returns() {
   const [returnAsset, setReturnAsset] = useState(false);
   const [addasset, setAddAsset] = useState(false);
   const [search, setSearch] = useState("");
+  const [isInventory, setIsinventory] = useState(false)
   const [actionRowId, setActionRowId] = useState(null);
   const key = "Composed Table";
   const [currentAssetName, setCurrentAssetName] = useState("");
@@ -58,7 +59,7 @@ function Returns() {
   const [currentPage, setCurrentPage] = useState(0);
   const [spaceId, setSpaceId] = useState(null);
   const [spaces, setSpaces] = useState([]);
-  
+  const [currentAsset, setCurrentAsset] = useState([])
   const [showReturnModal, setShowReturnModal] = useState(false);
   const theme = useTheme(getTheme());
   const filteredData = (returns || []).filter((item) =>
@@ -76,8 +77,7 @@ function Returns() {
         a.serial_number.localeCompare(b.serial_number)
       );
       setReturns(assetsInAlphabeticalOrder);
-      console.log(assetsInAlphabeticalOrder)
-     
+      
       navigate("/returns");
     } else {
       const token = localStorage.getItem("token");
@@ -172,14 +172,19 @@ function Returns() {
     setCurrentPage(0);
   }
 
-function handleReturnModal(name, user, id){
-  getSpaces()
-  setCurrentAssetName(name)
-  setBorrower(user)
-  setBorrowerId(id)
-  setShowReturnModal(!showReturnModal)
+  function handleReturnModal(name, user, id, isInventoryItem, assetItem) {
+    setActionRowId(null);
+    getSpaces();
+    setBorrower(user);
+    setBorrowerId(id);
+    setIsinventory(isInventoryItem);
+    setCurrentAsset(assetItem);
   
-}
+    // Prefer the name passed, otherwise use inventory name
+    setCurrentAssetName(name);
+    setShowReturnModal(true);
+  }
+  
 function handleReturn(id){
   setShowReturnModal(false)
   setActionRowId(null)
@@ -187,56 +192,113 @@ function handleReturn(id){
 }
 function handleReturnAsset(){
   if(spaceId !== '0'){
-    fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        assign_id: null,
-        status: 'unassigned',
-        space_id:spaceId
-      })
-    })
-    .then(response => response.json())
-    
-    .then((body) =>{
-      if (body['message'] === 'Asset updated'){
-        getAssets()
-        toast("Asset returned", {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          className: "toast-message",
-          bodyClassName: "toast-message-body",
-        });
-        setReturnAsset(false)
-      }
-    })
-    .then(() => {
-      fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}/history`, {
-        method: 'POST',
+    if (!isInventory){
+      fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({   
-          assigned_to: borrowerId,
-          space_id: Number(spaceId),
-          status: "returned"
+        body: JSON.stringify({
+          assign_id: null,
+          status: 'unassigned',
+          space_id:spaceId
         })
-
       })
       .then(response => response.json())
-      .then ((body) =>{
-        console.log(body)
-      })
       
-    })
+      .then((body) =>{
+        if (body['message'] === 'Asset updated'){
+          getAssets()
+          toast("Asset returned", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            className: "toast-message",
+            bodyClassName: "toast-message-body",
+          });
+          setReturnAsset(false)
+        }
+      })
+      .then(() => {
+        fetch(`https://mobileimsbackend.onrender.com/assets/${currentAssetId}/history`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({   
+            assigned_to: borrowerId,
+            space_id: Number(spaceId),
+            status: "returned"
+          })
+  
+        })
+        .then(response => response.json())
+        .then ((body) =>{
+          
+        })
+        
+      })
+    }
+    else{
+      console.log('this is an inventory')
+      fetch(`https://mobileimsbackend.onrender.com/inventory/items/${currentAssetId}`,{
+        method: 'PUT',
+        headers:{
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          assigned_to: null,
+          space_id: Number(spaceId),
+          status: 'unassigned',
+
+        })
+      })
+      .then(response => response.json())
+      .then((data) => {
+        if (data.inventory){
+          getAssets()
+          toast("Asset returned", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            className: "toast-message",
+            bodyClassName: "toast-message-body",
+          });
+          setReturnAsset(false)
+
+        }
+      })
+      .then(() => {
+        fetch(`https://mobileimsbackend.onrender.com/inventory/${currentAssetId}/history`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({   
+            assigned_to: borrowerId,
+            space_id: Number(spaceId),
+            status: "returned"
+          })
+  
+        })
+        .then(response => response.json())
+        .then ((body) =>{
+          
+        })
+        
+      })
+
+    }
   }
   else{
     toast("Please select a room", {
@@ -364,10 +426,19 @@ function handleReturnAsset(){
                                 />
                                 view
                               </span>
-                              <span onClick={(() => {
-                                handleReturnModal(item.name, item.assign['username'],item.assign['id'])
-                                setCurrentAssetId(item.id)
-                              })}>
+                              <span onClick={() => {
+    const isInventoryItem = !item.name;
+    setIsinventory(isInventoryItem);
+    setCurrentAsset(item);
+    setCurrentAssetId(item.id);
+    handleReturnModal(
+      item.name ? item.name : `${item.inventory['name']} / ${item.serial_number}`,
+      item.assign['username'],
+      item.assign['id'],
+      isInventoryItem,
+      item
+    );
+  }}>
                                 < AssignmentIndRoundedIcon
                                   style={{ fontSize: "1.3em" }}
                                 />

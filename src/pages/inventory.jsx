@@ -114,6 +114,9 @@ function Inventory() {
     }
   }, [loggedIn]);
   useEffect(() => {
+    if (!loggedIn){
+      navigate('/login')
+    }
     getInventoryCategories();
     getInventories();
     
