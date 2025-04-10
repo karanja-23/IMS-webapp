@@ -221,7 +221,7 @@ function InventoryItems() {
   function showAssignInventory(id,status){
     setCurrentAssetId(id)
     setActionRowId(null)
-    if (status === "available"){
+    if (status === "unassigned"){
       setShowAssignModal(true)
     }
     else{

@@ -63,7 +63,6 @@ function Login() {
       
       const assignedAssets = assetsRes.filter(asset => asset.status !== "unassigned")
       const assignedInventories = assignedInventoriesRes.filter(inventory=> inventory.status !== "unassigned")
-      console.log([...assignedAssets, ...assignedInventories])
       setReturns([...assignedAssets, ...assignedInventories])
 
       localStorage.setItem("permissions", JSON.stringify(permissionsRes));
