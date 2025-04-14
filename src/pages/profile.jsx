@@ -1,14 +1,16 @@
 import SidebarComponent from "../components/sidebar";
 import { useContext, useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
+import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
 import image from "../assets/user.png";
 import pluralize from "pluralize";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import "../CSS/users.css";
 import Notification from "../components/notification";
+import { ToastContainer } from "react-toastify";
 import {
   Table,
   Header,
@@ -22,6 +24,7 @@ import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
 function Profile() {
   const LIMIT = 5;
+  const navigate = useNavigate()
   const { isOpen, user,setUser,setAccessToken,setLoggedIn } = useContext(AppContext);
   const { username } = useParams();
   const [loading, setLoading] = useState(true);
@@ -72,6 +75,9 @@ function Profile() {
             }
           })
         }
+        else{
+            navigate('/login')
+        }
   }, []);
   
   function handleSearch(event) {
@@ -81,6 +87,7 @@ function Profile() {
   return (
     <div className="main">
       <SidebarComponent />
+      <ToastContainer />
 
       <div
         className="content"
@@ -116,6 +123,9 @@ function Profile() {
         ) : (
           <>
             <div className="profiles">
+             <div className="edit">
+                <ModeEditOutlineRoundedIcon />
+             </div>
               <div className="profile-img">
                 <img style={{ maxWidth: "200px" }} src={image} alt="user" />
               </div>

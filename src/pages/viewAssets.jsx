@@ -20,6 +20,7 @@ import {
   } from "@table-library/react-table-library/table";
   import { useTheme } from "@table-library/react-table-library/theme";
   import { getTheme } from "@table-library/react-table-library/baseline"
+import { ToastContainer } from "react-toastify";
 function ViewAssets() {
   const LIMIT = 5;
 
@@ -75,6 +76,7 @@ function ViewAssets() {
   return (
     <div className="main">
       <SidebarComponent />
+      <ToastContainer />
 
       <div
         className="content"
