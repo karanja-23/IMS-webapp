@@ -18,10 +18,15 @@ import ViewSpace from "../pages/viewspace"
 import Inventory from "../pages/inventory"
 import InventoryItems from "../pages/inventoryItems"
 import ViewInventoryItem from "../pages/viewInventoryItems"
+import Profile from "../pages/profile"
 const routes = [
     {
         path: "/",
         element: <Home />,
+    },
+    {
+        path:'/profile',
+        element: <Profile />
     },
     {
         path: "/login",

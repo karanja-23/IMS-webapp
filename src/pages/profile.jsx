@@ -1,78 +1,89 @@
 import SidebarComponent from "../components/sidebar";
 import { useContext, useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/context";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import Loading from "../components/loading";
-import image from "../assets/barcode.png";
+import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
+import image from "../assets/user.png";
+import pluralize from "pluralize";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
-import "../CSS/viewAssets.css";
-import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
+import "../CSS/users.css";
 import Notification from "../components/notification";
-import {
-    Table,
-    Header,
-    HeaderRow,
-    Body,
-    Row,
-    HeaderCell,
-    Cell,
-  } from "@table-library/react-table-library/table";
-  import { useTheme } from "@table-library/react-table-library/theme";
-  import { getTheme } from "@table-library/react-table-library/baseline"
 import { ToastContainer } from "react-toastify";
-function ViewAssets() {
+import {
+  Table,
+  Header,
+  HeaderRow,
+  Body,
+  Row,
+  HeaderCell,
+  Cell,
+} from "@table-library/react-table-library/table";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { getTheme } from "@table-library/react-table-library/baseline";
+function Profile() {
   const LIMIT = 5;
-
-  const { isOpen } = useContext(AppContext);
+  const navigate = useNavigate()
+  const { isOpen, user,setUser,setAccessToken,setLoggedIn } = useContext(AppContext);
   const { username } = useParams();
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
   const location = useLocation();
-  const [currentAsset, setCurrentAsset] = useState(null);
-  const id = location.state?.id;
+  const [currentUser, setCurrentUser] = useState(null);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
   const [actionRowId, setActionRowId] = useState(null);
-  const [assetHistory, setAssetHistory] = useState([])
-  const filteredData = assetHistory?.filter((item) =>
-    item.assigned_to?.username
-      ? item.assigned_to.username.toLowerCase().includes(search.toLowerCase())
-      : true // ✅ Include entries where assigned_to is null
-  )
-  const totalPages = Math.ceil(filteredData?.length  / LIMIT);
+  const [userHistory, setUserHistory] = useState([]);
+  const filteredData = userHistory?.filter((item) =>
+    item.assigned_to["username"].toLowerCase().includes(search.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredData.length / LIMIT);
   const paginatedData = filteredData?.slice(
     currentPage * LIMIT,
     (currentPage + 1) * LIMIT
   );
 
   const theme = useTheme(getTheme());
-  useEffect(() => {
-    fetch(`https://mobileimsbackend.onrender.com/assets/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          setCurrentAsset(data)
-          const sortedHistory = data.history.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
-          })
-          setAssetHistory(sortedHistory)
-          
-          setLoading(false);
-          
-        }
-      });
-  }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+      if (token) {
+        
+        setAccessToken(token);
+        fetch(`https://mobileimsbackend.onrender.com/protected/user`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data['msg'] === 'Token has expired') {
+              localStorage.removeItem("token");
+              setAccessToken("");
+              setLoggedIn(false);
+              navigate("/login");
+            }
+            if (data) {
+              setUser(data);             
+              setLoggedIn(true);
+              const history = [...data.history, ...data.inventory_history]
+              setUserHistory(history)
+              setLoading(false)
+            }
+          })
+        }
+        else{
+            navigate('/login')
+        }
+  }, []);
+  
   function handleSearch(event) {
     setSearch(event.target.value);
     setCurrentPage(0);
   }
-  
   return (
     <div className="main">
       <SidebarComponent />
@@ -95,7 +106,7 @@ function ViewAssets() {
           }}
         >
           <div className="title">
-            {loading ? null : <h3>Asset / {currentAsset.name}</h3>}
+            {loading ? null : <h3>Profile/{user.username}</h3>}
           </div>
           <Notification />
         </div>
@@ -112,31 +123,27 @@ function ViewAssets() {
         ) : (
           <>
             <div className="profiles">
+             <div className="edit">
+                <ModeEditOutlineRoundedIcon />
+             </div>
               <div className="profile-img">
-                <img src={image} alt="user" />
+                <img style={{ maxWidth: "200px" }} src={image} alt="user" />
               </div>
               <div className="profile-details">
-                <div style={{ width: "30%" }}>
+                <div>
                   <span>
-                    <strong>Asset name:</strong> {currentAsset.name}
+                    <strong>Username:</strong> {user.username}
                   </span>
                   <span>
-                    <strong>Serial number:</strong> {currentAsset.serial_number}
-                  </span>
-                  <span>
-                    <strong>Status:</strong> {currentAsset.status}
+                    <strong>Email:</strong> {user.email}
                   </span>
                 </div>
-                <div style={{ width: "60%" }}>
+                <div>
                   <span>
-                    <strong>Category:</strong> {currentAsset.category["name"]}
+                    <strong>Role:</strong> {user.role.name}
                   </span>
                   <span>
-                    <strong>Current Location:</strong>{" "}
-                    {currentAsset.space["name"]}
-                  </span>
-                  <span>
-                    <strong>Description:</strong> {currentAsset.description}
+                    <strong>Contact:</strong> {user.contact}
                   </span>
                 </div>
               </div>
@@ -151,7 +158,7 @@ function ViewAssets() {
               
             }}
           >
-            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>Asset history</h3>
+            <h3 style={{color:'var(--blue)', textAlign:'left', marginTop:"-10px", opacity:"0.8"}}>User history</h3>
             <input
                 type="search"
                 placeholder="search ..."
@@ -180,19 +187,21 @@ function ViewAssets() {
                   <Header>
                     <HeaderRow>
                       <HeaderCell>Date</HeaderCell>
-                      <HeaderCell>Assigned to</HeaderCell>
-                      <HeaderCell>Status</HeaderCell>
+                      <HeaderCell>Serial number</HeaderCell>
+                      <HeaderCell>Type</HeaderCell>
+                      <HeaderCell >Name</HeaderCell>
+                      <HeaderCell>Action</HeaderCell>
                       
                     </HeaderRow>
                   </Header>
 
                   <Body>
-                   
                     {tableList.map((item, index) => (
-                      
                       <Row key={index} item={item}>
-                        <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
-                         <Cell>{item.assigned_to?.username || "Not assigned"}</Cell>            
+                       <Cell>{new Date(item.date).toISOString().split('.')[0].replace('T', ' ')}</Cell>
+                        <Cell>{item.asset? item.asset['serial_number']: item.inventory_item['serial_number'] }</Cell> 
+                        <Cell>{item.type}</Cell>
+                        <Cell>{item.asset ? item.asset['name'] : pluralize.singular(item.name)}</Cell>               
                         <Cell>{item.status}</Cell>
                         
                       </Row>
@@ -226,4 +235,4 @@ function ViewAssets() {
     </div>
   );
 }
-export default ViewAssets;
+export default Profile;
