@@ -235,7 +235,7 @@ function FixedAssets() {
         category_id:Number(categoryId)     
 
       };
-      fetch('http://127.0.0.1:5000/assets',{
+      fetch('https://mobileimsbackend.onrender.com/assets',{
         method: 'POST',
         headers:{
             'Content-Type': 'application/json'
